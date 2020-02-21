@@ -1,0 +1,12 @@
+{
+  "name": "theresahatforthat",
+  "version": "1.0.0",
+  "description": "There's a Hat For That Application",
+  "main": "AHatForThat.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node AHatForThat.js"
+  },
+  "author": "Keith Pineo",
+  "license": "ISC"
+}

@@ -1,0 +1,26 @@
+{
+	"pages": {
+		"/": {
+			"title":"There's a Hat For That",
+			"file":"Home.js",
+			"navbar":false,
+			"loggedIn":false,
+			"admin":0
+		},
+		"/login": {
+			"title":"Login",
+			"file":"Login.js",
+			"navbar":true,
+			"loggedIn":false,
+			"admin":0
+		}
+	},
+	"api": {
+		"/logout": {
+			"file":"Logout.js",
+			"navbar":true,
+			"loggedIn":true,
+			"admin":0
+		}
+	}
+}
