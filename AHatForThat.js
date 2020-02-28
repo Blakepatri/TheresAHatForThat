@@ -2,18 +2,18 @@
 Main file for running everything
 */
 console.log("There's a Hat For That Booting :>");
-
+//Modules and imports
 const Server = require("./Server.js");
 const fs = require("fs");
 
 const directory = __dirname + "/"; //The directory of this file
 const configDirectory = directory + "config/";
-
 const routingConfig = configDirectory + "routing.json";
+
 const serverPort = 80;//HTTP
 const loggingLvl = 4;//Log everything
 
-var HTTPServer;//Object holding the HTTP server
+var HTTPServer;
 
 //Load the routing info
 fs.readFile(routingConfig, 'utf8', function(err,data) {

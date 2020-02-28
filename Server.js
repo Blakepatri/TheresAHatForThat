@@ -1,22 +1,24 @@
 /**
-A node based HTTP and IRC server, currently only supports WebSockets
+A node based HTTP server
 
 constructor:  port, logging, routing, localOnly
 	INT port: port the HTTP server will be listening on. Not implemented.
 	INT logging: level of logging to the Node console, 0 for bare minimum and initialization, 1 for error, 2 for warning, 3 for request URLs, 4 for request data 
 	OBJECT routing: the object that holds the routing information for serving files, and responding to requests. The object KEYS are valid request URLs
-	BOOL localOnly: if true will only respond to requests from localhost or 127.0.0.1
+	BOOL localOnly: if true will only respond to requests from localhost or 127.0.0.1, WILL BE DISCONTINUED
 */
 
 //Node modules
 const http = require("http");
+const url = require("url");
 const fs = require('fs');
 const path = require('path');
-const directory = __dirname + "/"; //The directory of this file
-const pageDirectory = directory + "pages/";//Directory of the individual page renderers
 const PageRenderer = require(__dirname + "/PageRenderer.js");//Primary page renderer, combines nav, pages, and the footer.
-const configDirectory = __dirname + "/config/";
+const ImageHandler = require(__dirname + "/ImageHandler.js");//Gets read streams for images and provides content type for response
 
+//Configuration
+const pageDirectory = __dirname + "/pages/";//Directory of the individual page renderers
+const configDirectory = __dirname + "/config/";
 //Navigation element files
 const navElem = "nav.js";
 const footerElem = "footer.js";
@@ -39,7 +41,7 @@ class Server {
 			this.logging = logging;
 		}
 
-		//Routing information object. The keys should be valid URLs
+		//Routing information object. The keys should be valid URL paths
 		/*Example:
 		{
 			"/": {
@@ -52,7 +54,7 @@ class Server {
 			}
 		}
 		*/
-		if (!routing || (typeof routing !== "object") && (typeof routing !== "OBJECT") && (typeof routing !== "Object")) {
+		if (!routing || ((typeof routing !== "object") && (typeof routing !== "OBJECT") && (typeof routing !== "Object"))) {
 			throw "Error initializing HTTP server, invalid routing information passed. Routing info should be an OBJECT. Type is currently: " + typeof routing;
 		}
 		else {
@@ -77,6 +79,7 @@ class Server {
 		this.log(0,"Beginning page rendering init.");
 		//Primary page renderer
 		this.PageRenderer = new PageRenderer(navElem,footerElem,this.routing.pages);
+		//Loop through the other pages and require their render functions
 		for(var page in this.routing.pages) {
 			this.log(0,"Page found: " + page);
 			var currentPage = this.routing.pages[page];
@@ -89,6 +92,7 @@ class Server {
 	//Initializae the routing of the API
 	initAPI() {
 		this.log(0,"Beginning API init.");
+		this.ImageHandler = new ImageHandler();
 		this.log(0,"Finished API init.");
 	}
 
@@ -96,8 +100,9 @@ class Server {
 	initHTTPServer() {
 		this.log(0,"Beginning HTTP server init","Port: ",this.port,"Logging level: ",this.logging);
 		this.HTTP = http.createServer((request, response) => {
-			this.HTTPResponse(request,response);
+			this.HTTPRequest(request,response);
 		});
+
 		//Begin listening for requests
 		this.HTTP.listen(this.port);
 		this.log(0,"Finished HTTP server init");
@@ -107,12 +112,12 @@ class Server {
 	initHTTPErrorCodes() {
 		//HTTP error codes and pages
 		this.errorCodes = {};
-		var errorCodes = this.errorCodes;
 		fs.readFile(configDirectory + "errorCodes.json", 'utf8', (err,data) => {
 			this.setHTTPErrorCodes(err,data);
 		});
 	}
 
+	//Callback for initHTTPErrorCodes, all this does is parse the JSON into an object.
 	setHTTPErrorCodes(err,data) {
 		if (err) {
 			throw err;
@@ -122,52 +127,31 @@ class Server {
 	}
 
 	//Handler for HTTP requests
-	HTTPResponse(request, response) {
+	HTTPRequest(request, response) {
 		//Ensure things are coming from the local machine
 		if (this.localOnly && request.headers.host !== "localhost" && request.headers.host !== "127.0.0.1") {
-			console.log("Forbidden request from: " + request.headers.host);
+			this.log(3,"Forbidden request from: " + request.headers.host);
 			this.HTTPError(request,response,403);
 			return;
 		}
-		//ignore favicon requests, not supported yet
-		else if (request.url == "\\favicon.ico" || request.url == "/favicon.ico" || request.url == "favicon.ico") {
-			this.HTTPError(request,response,404);
-			return;
-		}
 
-		this.log(3,request.url);
-
+		var path = url.parse(request.url).pathname;
+		this.log(3,path);
 		//Check if the request should actually be routed to a page
-		if (this.routing.pages[request.url]) {
-			var page = this.routing.pages[request.url];
-			console.log("Routing information!:",page);
-
-			var renderingError = false;
-			var pageData;
-		    try {
-		    	pageData = this.PageRenderer.render(page);
-		    }
-		    catch(err) {
-		    	renderingError = true;
-		    	this.log(1,err);
-		    }
-
-		    if (!renderingError) {
-		    	response.setHeader('Access-Control-Allow-Headers', 'authorization, content-type');
-			    response.writeHead(200, {
-			        'Content-Type': "text/html"
-			    });
-			    response.write(pageData);
-			    response.end();
-		    }
-		    else {
-		    	//something went wrong getting the page
-		    	this.HTTPError(request,response,500);
-		    }
+		if (this.routing.pages[path]) {
+			var page = this.routing.pages[path];
+			this.log(4,"Page information:",page);
+			this.HTMLResponse(request,response,page);
 		}
 		//Check if it should be routed to the API
-		else if (this.routing.api[request.url]) {
-
+		else if (this.routing.api[path]) {
+			var api = this.routing.api[path];
+			this.log(4,"API information:",api);
+		}
+		//Check if it should try and serve an image
+		else if (path.search(/^(\/images\/)/i) > -1) {
+			this.log(4,"Image information:",path);
+			this.ImageResponse(request,response,path);
 		}
 		//No routing info, send 404
 		else {
@@ -175,9 +159,61 @@ class Server {
 		}		
 	}
 
-	//Send back an HTTP serror message, code is the HTTP response code
+	//A standard web page response
+	HTMLResponse(request,response,page) {
+		var renderingError = false;
+		var pageData = "";
+	    try {
+	    	//Use the PageRenderer to generate the page itself
+	    	pageData = this.PageRenderer.render(page);
+	    }
+	    catch(err) {
+	    	renderingError = true;
+	    	this.log(1,err);
+	    }
+
+	    if (!renderingError) {
+	    	response.setHeader('Access-Control-Allow-Headers', 'authorization, content-type');
+		    response.writeHead(200, {
+		        'Content-Type': "text/html"
+		    });
+		    response.write(pageData);
+		    response.end();
+	    }
+	    else {
+	    	//something went wrong getting the page
+	    	this.HTTPError(request,response,500);
+	    }
+	}
+
+	//Send an image back, the handler will guess the content type
+	ImageResponse(request,response,path) {
+		var img = this.ImageHandler.getImage(path);
+		console.log("Image response: ",img);
+		if (img && img.readStream) {
+			response.setHeader('Access-Control-Allow-Headers', 'authorization, content-type');
+			response.writeHead(200, {
+		        'Content-Type': img.contentType,
+		        'Content-Length': img.size
+		    });
+
+			try {
+				img.readStream.pipe(response);
+			}
+			catch(err) {
+				this.log(1,err);
+			}
+		}
+		else {
+			this.HTTPError(request,response,404);
+		}
+	}
+
+	//Send back an HTTP error message, code is the HTTP response code
 	HTTPError(request,response,code) {
+		//Set the headers including the code.
 		response.writeHead(code, {'Content-Type': 'text/html'});
+		//Write a message to go with the error, contained in config/errorCodes.json
 		response.write(this.errorCodes[code]);
 		response.end();
 	}
@@ -193,5 +229,4 @@ class Server {
 	}
 }
 
-//Export so it can be used.
 module.exports = Server;

@@ -25,9 +25,10 @@ class PageRenderer {
 
 		return (`
 		  	<!DOCTYPE html>
-			<html>
-				<title>${page.title}</title>
+			<html lang="en">
 			<head>
+				<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+				<title>${page.title}</title>
 			</head>
 			<body>
 				${nav.render()}

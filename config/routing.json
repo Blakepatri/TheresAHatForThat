@@ -13,14 +13,15 @@
 			"navbar":true,
 			"loggedIn":false,
 			"admin":0
-		}
-	},
-	"api": {
+		},
 		"/logout": {
 			"file":"Logout.js",
 			"navbar":true,
 			"loggedIn":true,
 			"admin":0
 		}
+	},
+	"api": {
+				
 	}
 }
