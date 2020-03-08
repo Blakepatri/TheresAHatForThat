@@ -194,7 +194,7 @@ class Server {
 	FileResponse(request,response,URLPath,fileFolder) {
 		var fileName = path.basename(URLPath);
 		var file = this.FileHandler.getFile(fileName,fileFolder);
-		console.log("File response: ",file);
+		this.log(4,"File response: ",file);
 		if (file && file.readStream) {
 			response.setHeader('Access-Control-Allow-Headers', 'authorization, content-type');
 			response.writeHead(200, {

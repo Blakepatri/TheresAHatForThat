@@ -25,7 +25,6 @@ class FileHandler {
 		try {
 			file = {};
 			var filePath = path.join(__dirname,folder,fileName); //Join the folder and name
-			console.log("Filepath: " + filePath)
 			file.size = fs.statSync(filePath).size;
 			file.readStream = fs.createReadStream(filePath);
 
