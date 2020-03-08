@@ -14,7 +14,7 @@ const url = require("url");
 const fs = require('fs');
 const path = require('path');
 const PageRenderer = require(__dirname + "/PageRenderer.js");//Primary page renderer, combines nav, pages, and the footer.
-const ImageHandler = require(__dirname + "/ImageHandler.js");//Gets read streams for images and provides content type for response
+const FileHandler = require(__dirname + "/FileHandler.js");//Gets read streams for files as well as other information such as the content type
 
 //Configuration
 const pageDirectory = __dirname + "/pages/";//Directory of the individual page renderers
@@ -92,7 +92,7 @@ class Server {
 	//Initializae the routing of the API
 	initAPI() {
 		this.log(0,"Beginning API init.");
-		this.ImageHandler = new ImageHandler();
+		this.FileHandler = new FileHandler();
 		this.log(0,"Finished API init.");
 	}
 
@@ -135,23 +135,27 @@ class Server {
 			return;
 		}
 
-		var path = url.parse(request.url).pathname;
-		this.log(3,path);
+		var URLPath = url.parse(request.url).pathname;
+		this.log(3,URLPath);
 		//Check if the request should actually be routed to a page
-		if (this.routing.pages[path]) {
-			var page = this.routing.pages[path];
+		if (this.routing.pages[URLPath]) {
+			var page = this.routing.pages[URLPath];
 			this.log(4,"Page information:",page);
 			this.HTMLResponse(request,response,page);
 		}
 		//Check if it should be routed to the API
-		else if (this.routing.api[path]) {
-			var api = this.routing.api[path];
+		else if (this.routing.api[URLPath]) {
+			var api = this.routing.api[URLPath];
 			this.log(4,"API information:",api);
 		}
-		//Check if it should try and serve an image
-		else if (path.search(/^(\/images\/)/i) > -1) {
-			this.log(4,"Image information:",path);
-			this.ImageResponse(request,response,path);
+		//Check if it should try and serve a file or image
+		else if (URLPath.search(/^(\/images\/)/i) > -1) {
+			this.log(4,"image information:",URLPath);
+			this.FileResponse(request,response,URLPath,"images");
+		}
+		else if (URLPath.search(/^(\/scripts\/)/i) > -1) {
+			this.log(4,"script information:",URLPath);
+			this.FileResponse(request,response,URLPath,"scripts");
 		}
 		//No routing info, send 404
 		else {
@@ -186,19 +190,20 @@ class Server {
 	    }
 	}
 
-	//Send an image back, the handler will guess the content type
-	ImageResponse(request,response,path) {
-		var img = this.ImageHandler.getImage(path);
-		console.log("Image response: ",img);
-		if (img && img.readStream) {
+	//Send a file back, the handler will guess the content type
+	FileResponse(request,response,URLPath,fileFolder) {
+		var fileName = path.basename(URLPath);
+		var file = this.FileHandler.getFile(fileName,fileFolder);
+		console.log("File response: ",file);
+		if (file && file.readStream) {
 			response.setHeader('Access-Control-Allow-Headers', 'authorization, content-type');
 			response.writeHead(200, {
-		        'Content-Type': img.contentType,
-		        'Content-Length': img.size
+		        'Content-Type': file.contentType,
+		        'Content-Length': file.size
 		    });
 
 			try {
-				img.readStream.pipe(response);
+				file.readStream.pipe(response);
 			}
 			catch(err) {
 				this.log(1,err);
