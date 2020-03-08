@@ -30,3 +30,35 @@ body {
 .nav-bar-right {
   float: right;
 }
+.column {
+  float: left;
+  width: 33.33%;
+  text-align: center;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+  }
+}
+.home {
+    text-align: center;
+    padding: 20px;
+}
+img {
+  width: 300px;
+  padding:1px;
+  border:1px solid #021a40;
+}
+h1 {
+  width: 300px;
+  padding:1px;
+  border:1px solid #021a40;
+  
+
+}
