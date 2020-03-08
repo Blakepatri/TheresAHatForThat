@@ -72,13 +72,19 @@ h1 {
   padding-top: 100px;
   padding-bottom: 100px;
 }
+.account {
+  padding-left: 500px;
+  padding-right: 500px;
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
 /* Bordered form */
 form {
   border: 3px solid #f1f1f1;
 }
 
 /* Full-width inputs */
-input[type=text], input[type=password] {
+input[type=text], input[type=password], input[type=email] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
