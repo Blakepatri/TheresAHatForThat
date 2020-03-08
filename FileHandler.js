@@ -4,6 +4,23 @@ A class for getting information about files, as well as readstreams to pipe thos
 const fs = require('fs');
 const path = require('path');
 
+//The content types of files the server can send
+const contentTypes = {
+	".png":"image/png",
+	".jpg":"image/jpeg",
+	".jpeg":"image/jpeg",
+	".gif":"image/gif",
+	".bmp":"image/bmp",
+	".css":"text/css",
+	".csv":"text/csv",
+	".html":"text/html",
+	".js":"application/javascript",
+	".rtf":"text/rtf",
+	".json":"application/json",
+	".xml":"text/xml",
+	".txt":"text/plain"
+}
+
 class FileHandler {
 	constructor() {
 
@@ -30,21 +47,12 @@ class FileHandler {
 
 			var fileType = filePath.substring(filePath.lastIndexOf("."));
 			//Guess the content type
-			if (fileType == ".jpg" || fileType == ".jpeg") {
-				file.contentType = "image/jpeg";
-			}
-			else if (fileType == ".png") {
-				file.contentType = "image/png";
-			}
-			else if (fileType == ".gif") {
-				file.contentType = "image/gif";
-			}
-			else if (fileType == ".bmp") {
-				file.contentType = "image/bmp";
+			if (contentTypes[fileType]) {
+				file.contentType = contentTypes[fileType];
 			}
 			else {
-				//Try and guess that it is the common JPG type
-				file.contentType = "image/jpeg";
+				//Try and guess that it is text
+				file.contentType = "text/plain";
 			}
 		}
 		catch(err) {
