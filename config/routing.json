@@ -22,6 +22,9 @@
 		}
 	},
 	"api": {
-				
+		"/user_login": {
+			"file":"UserLogin.js",
+			"admin":0
+		}		
 	}
 }
