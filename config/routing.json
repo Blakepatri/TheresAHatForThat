@@ -25,6 +25,10 @@
 		"/user_login": {
 			"file":"UserLogin.js",
 			"admin":0
+		},
+		"/user_logout": {
+			"file":"UserLogout.js",
+			"admin":0
 		}		
 	}
 }
