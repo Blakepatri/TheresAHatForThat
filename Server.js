@@ -157,6 +157,14 @@ class Server {
 			this.log(4,"script information:",URLPath);
 			this.FileResponse(request,response,URLPath,"scripts");
 		}
+		else if (URLPath.search(/^(\/css\/)/i) > -1) {
+			this.log(4,"script information:",URLPath);
+			this.FileResponse(request,response,URLPath,"css");
+		}
+		else if (URLPath.search(/^(\/files\/)/i) > -1) {
+			this.log(4,"script information:",URLPath);
+			this.FileResponse(request,response,URLPath,"files");
+		}
 		//No routing info, send 404
 		else {
 			this.HTTPError(request,response,404);
