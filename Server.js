@@ -140,18 +140,13 @@ class Server {
 		var URLPath = url.parse(request.url).pathname;
 		this.log(3,URLPath);
 		var cookies = new Cookies(request,response);
-		var session = null;
-		var sessionCookie = cookies.get('TAHFT');
-
-		if (sessionCookie) {
-			session = SessionHandler.getSession(sessionCookie);
-		}
+		var session = SessionHandler.getSession(request,response,cookies)
 
 		//Check if the request should actually be routed to a page
 		if (this.routing.pages[URLPath]) {
 			var page = this.routing.pages[URLPath];
 			this.log(4,"Page information:",page);
-			this.HTMLResponse(request,response,page);
+			this.HTMLResponse(request,response,page,session);
 		}
 		//Check if it should be routed to the API
 		else if (this.routing.api[URLPath]) {
@@ -174,12 +169,12 @@ class Server {
 	}
 
 	//A standard web page response
-	HTMLResponse(request,response,page) {
+	HTMLResponse(request,response,page,session) {
 		var renderingError = false;
 		var pageData = "";
 	    try {
 	    	//Use the PageRenderer to generate the page itself
-	    	pageData = this.PageRenderer.render(page);
+	    	pageData = this.PageRenderer.render(page,session);
 	    }
 	    catch(err) {
 	    	renderingError = true;

@@ -33,15 +33,25 @@ class SessionHandler {
 
 	//Decrypt and parse session info sent from a user, returns null if there is an error.
 	getSession(req,res) {
-		var sessionCookie = decryptSession(sessionString);
+		var sessionCookieString = cookies.get('TAHFT');
+		var sessionCookie = null;
+		var session = null;
 
-		if (sessionCookie.userID) {
-
+		if (sessionString) {
+			//Decrypt the cookie into a JSON object
+			sessionCookie = decryptSession(sessionCookie);
 		}
+		
 		//User ID is something that MUST be set for this. If it is not then the session has been compromised somehow, return null.
-		else {
-			session = null;
-		}
+		if (sessionCookie && sessionCookie.userID) {
+			//session currently loaded in memory, grab it from there
+			if (this.sessions[userID]) {
+				session = this.sessions[userID];
+			}
+			else {
+				//GET SESSION FROM DATABASE
+			}
+		}		
 
 		return session;
 	}
@@ -76,6 +86,7 @@ class SessionHandler {
 		}
 		
 		if (newSession) {
+			//Encrypt the session to be sent back
 			cookies.set("THAFT",encryptSession(newSession));
 			return true;
 		}
@@ -85,12 +96,22 @@ class SessionHandler {
 	}
 
 	//Called from UserLogout.js
-	endSession(request,response) {
+	endSession(req,res,cookies) {
+		var session = getSession(req,res);
 
+		if (session) {
+			cookies.set("THAFT","");
+			this.sessions[session.id] = null;
+			//CLEAR FROM DATABASE IF STORED
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	//Check the integrity of the session to see if it matches what we have stored
-	checkSession(request,response) {
+	checkSession(req,resp) {
 
 	}
 }

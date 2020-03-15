@@ -19,7 +19,7 @@ class PageRenderer {
 		}
 	}
 
-	render(page) {
+	render(page,session) {
 		var nav = this.nav;
 		var footer = this.footer;
 
