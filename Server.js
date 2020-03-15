@@ -141,7 +141,7 @@ class Server {
 		this.log(3,URLPath);
 		var cookies = new Cookies(request,response);
 		var session = null;
-		var sessionCookie = cookies.get('TAHTsession');
+		var sessionCookie = cookies.get('TAHFT');
 
 		if (sessionCookie) {
 			session = SessionHandler.getSession(sessionCookie);
