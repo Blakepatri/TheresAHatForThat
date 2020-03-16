@@ -20,6 +20,7 @@ const SessionHandler = require(__dirname + "/SessionHandler.js");
 
 //Configuration
 const pageDirectory = __dirname + "/pages/";//Directory of the individual page renderers
+const APIDirectory = __dirname + "/api/";//Directory of the API functions
 const configDirectory = __dirname + "/config/";
 //Navigation element files
 const navElem = "nav.js";
@@ -95,6 +96,12 @@ class Server {
 	initAPI() {
 		this.log(0,"Beginning API init.");
 		this.FileHandler = new FileHandler();
+
+		for (var api in this.routing.api) {
+			this.log(0,"API found: " + api);
+			var currentAPI = this.routing.api[api];
+			currentAPI.API = require(APIDirectory + currentAPI.file).API;
+		}
 		this.log(0,"Finished API init.");
 	}
 
@@ -152,6 +159,8 @@ class Server {
 		else if (this.routing.api[URLPath]) {
 			var api = this.routing.api[URLPath];
 			this.log(4,"API information:",api);
+			//Call the API function from the API object, SessionHandler and Cookies do not necessarily need to be handled by the API
+			api.API(request,response,cookies,this.SessionHandler);
 		}
 		//Check if it should try and serve a file or image
 		else if (URLPath.search(/^(\/images\/)/i) > -1) {

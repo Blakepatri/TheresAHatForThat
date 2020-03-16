@@ -86,8 +86,13 @@ class SessionHandler {
 	}
 
 	//Start a new session, returns true if succesful, false otherwise
-	startSession(cookies,userID,username) {
+	startSession(cookies,userID,username,admin) {
 		var newSession = null;
+
+		if (!admin) {
+			admin = 0;
+		}
+
 		if (this.sessions[userID]) {
 			//This user is already logged in, don't know why a new session is trying to be started
 			session = this.sessions[userID];
