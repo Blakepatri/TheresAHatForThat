@@ -35,8 +35,18 @@ body {
   width: 33.33%;
   text-align: center;
 }
-
+.column_hats {
+  padding-top: 5px;
+  float: left;
+  width: 20%;
+  text-align: center;
+}
 .row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.row_hats:after {
   content: "";
   display: table;
   clear: both;
@@ -44,6 +54,9 @@ body {
 @media screen and (max-width: 600px) {
   .column {
     width: 100%;
+  }
+  .column_hats {
+    width: 50%;
   }
 }
 .home {
@@ -55,10 +68,23 @@ img {
   padding:1px;
   border:1px solid #021a40;
 }
+.img_hats {
+  width: 200px;
+  padding:1px;
+  border:1px solid #021a40;
+}
 h1 {
   width: 300px;
   padding:1px;
   border:1px solid #021a40;
+}
+.h1_hats {
+  padding-left: 20px;
+  width: 200px;
+  padding:1px;
+  border:1px solid #021a40;
+  font-size: 18px;
+
 }
 .login {
   padding-left: 500px;
