@@ -44,9 +44,10 @@ class SessionHandler {
 		
 		//User ID is something that MUST be set for this. If it is not then the session has been compromised somehow, return null.
 		if (sessionCookie && sessionCookie.userID) {
-			//session currently loaded in memory, grab it from there
+			//session currently loaded in memory, grab it from there and refresh the last accessed time
 			if (this.sessions[userID]) {
 				session = this.sessions[userID];
+				session.last = Date.now();
 			}
 			else {
 				//GET SESSION FROM DATABASE
@@ -56,13 +57,30 @@ class SessionHandler {
 		return session;
 	}
 
+	//Encrypt the session
 	encryptSession(session) {
+		var sessionJSON = JSON.stringify(session);
+		var cipher = crypto.createCipher('aes-256-cbc',this.SessionKey);
+		var sessionString = cipher.update(sessionJSON,'utf8','base64');
+		sessionString += cipher.final('base64');
 
 		return sessionString;
 	}
 
-	//Returns an object
+	//Decrypt the session. Returns an object or null if there was an error parsing it
 	decryptSession(sessionString) {
+		var session = null;
+		try {
+			var decipher = crypto.createDecipher('aes-256-cbc',this.SessionKey);
+			var decipheredString = decipher.update(sessionString,'base64','utf8');
+			decipheredString = decipher.final('utf8');
+			session = JSON.parse(decipheredString);
+		}
+		catch(err) {
+			console.log("There was an error decrypting a session cookie. It might have been tampered",err);
+			session = null
+		}
+
 
 		return session;
 	}
