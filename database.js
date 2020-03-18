@@ -8,7 +8,9 @@ const mysql = require('mysql');
 
 class database {
 
+  //Creates a database object and takes the json file with connection information.
   constructor(login){
+
     //Check that login information has been provided
     if(!login){
       throw "Error: no login file given";
