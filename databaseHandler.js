@@ -56,6 +56,11 @@ class databaseHandler{
 
       }
 
+      //Checks if the user already exists
+      checkUser(){
+        
+      }
+
       //Add a new user
       addUser(email, pass, salt, firstName, lastName){
 
@@ -65,6 +70,26 @@ class databaseHandler{
         query = mysql.format(query, variables);
 
         return queryDatabase(query);
+
+      }
+
+      //Creates a new admin entry
+      addAdmin(){
+
+      }
+
+      //Deletes specified admin entry
+      deleteAdmin(){
+
+      }
+
+      //Verifies that a user is present in the admin table
+      checkAdmin(){
+
+      }
+
+      //Checks an admins permission level
+      checkPermissions(){
 
       }
 
@@ -133,7 +158,30 @@ class databaseHandler{
 
       };
 
+      //Adds a new product image
+      addImage(){
 
+      }
+
+      //Deletes specified product image
+      deleteImage(){
+
+      }
+
+      //Allows for the image to be chnaged or updated
+      changeImage(){
+
+      }
+
+      //Adds a new promotion
+      addPromotion(){
+
+      }
+
+      //Deletes a specifc promotion
+      deletePromotion(){
+
+      }
 
       //Retrieves a specific invoice from the database
       getInvoice(id){
