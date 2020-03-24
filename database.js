@@ -37,15 +37,15 @@ class database {
   }
 
   //A Method to create a connection pool
-  createConnPool(db){
+  createConnPool(){
 
     //Create a connection pool
     let pool = mysql.createPool({
       connectionLimit:10,
-      host: db.host,
-      user: db.user,
-      password: db.pass,
-      database: db.name
+      host: this.host,
+      user: this.user,
+      password: this.pass,
+      database: this.name
     })
 
     pool.getConnection((err, connection) => {
