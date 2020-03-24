@@ -127,4 +127,14 @@ class databaseHandler{
 
       }
 
+      //Updates the Orders table to indicate order is shipped
+      markOrderShipped(id){
+
+        query = 'UPDATE Orders SET isShipped = 1 WHERE invoiceNum = ?';
+        query = mysql.format(query, id);
+
+        queryDatabase(query);
+
+      }
+
 }
