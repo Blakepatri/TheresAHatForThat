@@ -71,7 +71,7 @@ class databaseHandler{
         variables = [newPass, userName, oldPass];
         query = mysql.format(query, variables);
 
-        return queryDatabase(query);
+        queryDatabase(query);
 
       }
 
@@ -94,8 +94,7 @@ class databaseHandler{
         variables = [name, desc];
         query = mysl.format(query, variables);
 
-        return queryDatabase(query);
-
+        queryDatabase(query);
       }
 
       //Delte a product from the database by name or id
@@ -105,21 +104,22 @@ class databaseHandler{
         variables = [id, id];
         query = mysql.format(query, variables);
 
-        return queryDatabase(query);
+        queryDatabase(query);
 
       }
 
-      //Retrieves an specific invoice from the database
-      getInvoice(invoice){
+      //Retrieves a specific invoice from the database
+      getInvoice(id){
 
-        query = '';
+        query = 'SELECT * FROM Orders WHERE invoiceNum = ?';
+        query = mysql.format(query, id);
 
         return queryDatabase(query);
 
       }
 
       //Creates a new invoice entry
-      addInvoice(invoice){
+      addInvoice(){
 
         query = '';
 
