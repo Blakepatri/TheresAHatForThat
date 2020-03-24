@@ -65,9 +65,11 @@ class databaseHandler{
       }
 
       //Change a users password
-      changeUserPassword(password){
+      changeUserPassword(userName, oldPass, newPass){
 
-        query = '';
+        query = 'UPDATE Users SET password = ? WHERE email = ? AND password = ?';
+        variables = [newPass, userName, oldPass];
+        query = mysql.format(query, variables);
 
         return queryDatabase(query);
 
