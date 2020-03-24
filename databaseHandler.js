@@ -98,10 +98,12 @@ class databaseHandler{
 
       }
 
-      //Delte a product from the database
-      deleteProduct(product){
+      //Delte a product from the database by name or id
+      deleteProduct(id){
 
-        query = '';
+        query = 'DELETE FROM Products WHERE productId = ? OR productName = ?';
+        variables = [id, id];
+        query = mysql.format(query, variables);
 
         return queryDatabase(query);
 
