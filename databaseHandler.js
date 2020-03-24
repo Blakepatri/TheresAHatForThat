@@ -30,6 +30,21 @@ class databaseHandler{
         });
       };
 
+      //Creates a new session entry
+      addSession(){
+
+      };
+
+      //Deletes a session entry
+      delteSession(){
+
+      };
+
+      //Finds a specific session entry
+      findSession(){
+
+      };
+
       //Verify user for log in
       getUser(email, pass){
 
@@ -107,6 +122,18 @@ class databaseHandler{
         queryDatabase(query);
 
       }
+
+      //Adds a new product variant
+      addNewVariant(){
+
+      };
+
+      //Deletes a product variant
+      delteVariant(){
+
+      };
+
+
 
       //Retrieves a specific invoice from the database
       getInvoice(id){
