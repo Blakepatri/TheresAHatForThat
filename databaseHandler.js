@@ -75,19 +75,24 @@ class databaseHandler{
 
       }
 
-      //Find a product in the database
-      getProduct(product){
+      //Find a product in the database by the name or the id.
+      getProduct(id){
 
-        query = '';
+        query = 'SELECT * WHERE productName = ? OR productId = ?';
+        varaibles = [id, id];
+        query = mysql.format(query, variables);
 
         return queryDatabase(query);
 
       }
 
       //Add a new product to the database
-      addProduct(product){
+      addProduct(name, desc){
 
-        query = '';
+        query = `INSERT INTO Products (productName, productDescription) VALUES
+        (?, ?)`;
+        variables = [name, desc];
+        query = mysl.format(query, variables);
 
         return queryDatabase(query);
 
