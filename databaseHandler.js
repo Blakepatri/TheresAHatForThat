@@ -137,4 +137,13 @@ class databaseHandler{
 
       }
 
+      addTrackingNUmber(id, num){
+
+        query = 'UPDATE Orders SET trackingNumber = ? WHERE invoiceNum = ?';
+        variables = [id,num];
+        query = mysql.format(query, variables);
+
+        queryDatabase(query);
+      }
+
 }
