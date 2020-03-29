@@ -1,6 +1,6 @@
 const qs = require('querystring');
 //Credit to: https://emailregex.com/
-const emailRegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const emailRegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/g;
 
 /**
 A function to handle registering users
@@ -25,6 +25,7 @@ function API(req,res,cookies,SessionHandler,db) {
 
 		    if (isEmailValid(postData["email"]) && isValidPassword(postData["psw"],postData["psw-confirm"])) {
 		    	console.log("Email and password are valid");
+		    	console.log(db.checkUser(postData["email"]));
 		    }
 		    else {
 		    	regError = true;
@@ -38,17 +39,27 @@ function API(req,res,cookies,SessionHandler,db) {
 
 //A function to check if an email is valid or not, returns true if valid, false otherwise
 function isEmailValid(email) {
-    var isValid = true;
+	var isValid = true;
 
-    //Check if the string exists, if there is a length, and length constraints
-    if (!email || !email.length || email.length < 0 || email.length > 254) {
-        isValid = false;
-    }
-    //<> are not valid email address chars, and could open some things to cross site attacks
-    else if (email.indexOf(">") > -1 || email.indexOf("<") > -1) {
-        isValid = false;
-    }
-    //Check this complicated regular expression
+	try {
+		//Check if the string exists, if there is a length, and length constraints
+	    if (!email || !email.length || email.length < 0 || email.length > 254) {
+	        isValid = false;
+	    }
+	    //<> are not valid email address chars, and could open some things to cross site attacks,
+	    else if (email.indexOf(">") > -1 || email.indexOf("<") > -1) {
+	        isValid = false;
+	    }
+	    //Check this complicated regular expression, if no matches the email isn't valid
+	    else if (!emailRegExp.test(email)) {
+			isValid = false;
+		}
+	}
+	catch(err) {
+		console.log("Email validation error: ");
+		console.log(err);
+		isValid = false;
+	}
 
     return isValid;
 }
@@ -57,9 +68,10 @@ function isEmailValid(email) {
 function isValidPassword(pass,passConfirm) {
 	var isValid = true;
 
-	if (!pass || !passConfirm || pass !== passConfirm || pass.length < 10) {
+	if (!pass || !passConfirm || pass !== passConfirm || !pass.length || pass.length < 10 || pass.length > 1024) {
 		isValid = false;
 	}
+
 	return isValid;
 }
 

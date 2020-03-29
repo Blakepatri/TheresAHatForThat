@@ -21,7 +21,7 @@ class database {
 
       //Check that all the required fields are completed
       if(!data.host || !data.port || !data.user || !data.pass){
-        throw "Error: Incomplete login information"
+        throw "Error: Incomplete login information";
       }
       //Set the variables required to create a conection.
       else{
@@ -29,7 +29,7 @@ class database {
         this.host = data.host;
         this.password = data.pass;
         this.port = data.port;
-        this.name = data.name
+        this.database = data.database
       }
     }
   }
@@ -37,16 +37,15 @@ class database {
   //A Method to create a connection pool
   createConnPool(){
     //Create a connection pool
-    let pool = mysql.createPool({
+    this.pool = mysql.createPool({
       connectionLimit:10,
       host: this.host,
       user: this.user,
       password: this.pass,
-      database: this.name
+      database: this.database
     })
 
-    pool.getConnection((err, connection) => {
-
+    this.pool.getConnection((err, connection) => {
       //Checks the connection for errors
       if(err){
         if(err.code === 'PROTOCOL_CONNECTION_LOST'){

@@ -12,13 +12,13 @@ class databaseHandler{
       initDB(err,data) {
         console.log("Initializing databaseHandler from config: " + DBConfig);
         this.db = new database(data);
-        this.pool = this.db.createConnPool();
+        this.db.createConnPool();
         console.log("databaseHandler init finished");
       }
 
       queryDatabase(query){
         //Checkout a connection to use from the pool.
-        this.pool.getConnection(function(err, connection) {
+        this.db.pool.getConnection(function(err, connection) {
           if (err) throw err; // not connected!
 
           //Execute a query
@@ -58,13 +58,16 @@ class databaseHandler{
         variables = [email, pass];
         query = mysql.format(query, variables);
 
-        return queryDatabase(query);
+        return this.queryDatabase(query);
 
       }
 
       //Checks if the user already exists
-      checkUser(){
-        
+      checkUser(email){
+        var query = "SELECT * FROM Users WHERE email = ?;";
+        var variables = [email];
+        query = mysql.format(query, variables);
+        return this.queryDatabase(query);
       }
 
       //Add a new user
@@ -75,7 +78,7 @@ class databaseHandler{
         variables = [email, pass, salt, firstName, lastName];
         query = mysql.format(query, variables);
 
-        return queryDatabase(query);
+        return this.queryDatabase(query);
 
       }
 
@@ -106,7 +109,7 @@ class databaseHandler{
         variables = [email, pass];
         query = mysql.format(query, variables);
 
-        return queryDatabase(query);
+        return this.queryDatabase(query);
 
       }
 
@@ -117,7 +120,7 @@ class databaseHandler{
         variables = [newPass, userName, oldPass];
         query = mysql.format(query, variables);
 
-        queryDatabase(query);
+        this.queryDatabase(query);
 
       }
 
@@ -128,7 +131,7 @@ class databaseHandler{
         varaibles = [id, id];
         query = mysql.format(query, variables);
 
-        return queryDatabase(query);
+        return this.queryDatabase(query);
 
       }
 
@@ -140,7 +143,7 @@ class databaseHandler{
         variables = [name, desc];
         query = mysl.format(query, variables);
 
-        queryDatabase(query);
+        this.queryDatabase(query);
       }
 
       //Delte a product from the database by name or id
@@ -150,7 +153,7 @@ class databaseHandler{
         variables = [id, id];
         query = mysql.format(query, variables);
 
-        queryDatabase(query);
+        this.queryDatabase(query);
 
       }
 
@@ -195,7 +198,7 @@ class databaseHandler{
         query = 'SELECT * FROM Orders WHERE invoiceNum = ?';
         query = mysql.format(query, id);
 
-        return queryDatabase(query);
+        return this.queryDatabase(query);
 
       }
 
@@ -204,7 +207,7 @@ class databaseHandler{
 
         query = '';
 
-        return queryDatabase(query);
+        return this.queryDatabase(query);
 
       }
 
@@ -214,7 +217,7 @@ class databaseHandler{
         query = 'UPDATE Orders SET isShipped = 1 WHERE invoiceNum = ?';
         query = mysql.format(query, id);
 
-        queryDatabase(query);
+        this.queryDatabase(query);
 
       }
 
@@ -224,7 +227,7 @@ class databaseHandler{
         variables = [id,num];
         query = mysql.format(query, variables);
 
-        queryDatabase(query);
+        this.queryDatabase(query);
       }
 
 }
