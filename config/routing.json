@@ -19,6 +19,12 @@
 			"navbar":true,
 			"loggedIn":true,
 			"admin":0
+		},
+		"/register": {
+			"file":"Registration.js",
+			"navbar":true,
+			"loggedIn":true,
+			"admin":0
 		}
 	},
 	"api": {

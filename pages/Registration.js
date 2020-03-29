@@ -1,5 +1,5 @@
 /**
-Home page HTML elements
+Registration page
 
 constructor: 
 */
@@ -28,6 +28,5 @@ function render() {
 		</div>`
 	);
 }
-
 
 module.exports.render = render;
