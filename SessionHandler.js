@@ -37,7 +37,7 @@ class SessionHandler {
 		var sessionCookie = null;
 		var session = null;
 
-		if (sessionString) {
+		if (sessionCookieString) {
 			//Decrypt the cookie into a JSON object
 			sessionCookie = decryptSession(sessionCookie);
 		}
