@@ -13,11 +13,14 @@ const http = require("http");
 const url = require("url");
 const fs = require('fs');
 const path = require('path');
+const Cookies = require('cookies');
 const PageRenderer = require(__dirname + "/PageRenderer.js");//Primary page renderer, combines nav, pages, and the footer.
 const FileHandler = require(__dirname + "/FileHandler.js");//Gets read streams for files as well as other information such as the content type
+const SessionHandler = require(__dirname + "/SessionHandler.js");
 
 //Configuration
 const pageDirectory = __dirname + "/pages/";//Directory of the individual page renderers
+const APIDirectory = __dirname + "/api/";//Directory of the API functions
 const configDirectory = __dirname + "/config/";
 //Navigation element files
 const navElem = "nav.js";
@@ -93,6 +96,12 @@ class Server {
 	initAPI() {
 		this.log(0,"Beginning API init.");
 		this.FileHandler = new FileHandler();
+
+		for (var api in this.routing.api) {
+			this.log(0,"API found: " + api);
+			var currentAPI = this.routing.api[api];
+			currentAPI.API = require(APIDirectory + currentAPI.file).API;
+		}
 		this.log(0,"Finished API init.");
 	}
 
@@ -137,16 +146,21 @@ class Server {
 
 		var URLPath = url.parse(request.url).pathname;
 		this.log(3,URLPath);
+		var cookies = new Cookies(request,response);
+		var session = SessionHandler.getSession(request,response,cookies)
+
 		//Check if the request should actually be routed to a page
 		if (this.routing.pages[URLPath]) {
 			var page = this.routing.pages[URLPath];
 			this.log(4,"Page information:",page);
-			this.HTMLResponse(request,response,page);
+			this.HTMLResponse(request,response,page,session);
 		}
 		//Check if it should be routed to the API
 		else if (this.routing.api[URLPath]) {
 			var api = this.routing.api[URLPath];
 			this.log(4,"API information:",api);
+			//Call the API function from the API object, SessionHandler and Cookies do not necessarily need to be handled by the API
+			api.API(request,response,cookies,this.SessionHandler);
 		}
 		//Check if it should try and serve a file or image
 		else if (URLPath.search(/^(\/images\/)/i) > -1) {
@@ -172,12 +186,12 @@ class Server {
 	}
 
 	//A standard web page response
-	HTMLResponse(request,response,page) {
+	HTMLResponse(request,response,page,session) {
 		var renderingError = false;
 		var pageData = "";
 	    try {
 	    	//Use the PageRenderer to generate the page itself
-	    	pageData = this.PageRenderer.render(page);
+	    	pageData = this.PageRenderer.render(page,session);
 	    }
 	    catch(err) {
 	    	renderingError = true;
