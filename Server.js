@@ -16,7 +16,8 @@ const path = require('path');
 const Cookies = require('cookies');
 const PageRenderer = require(__dirname + "/PageRenderer.js");//Primary page renderer, combines nav, pages, and the footer.
 const FileHandler = require(__dirname + "/FileHandler.js");//Gets read streams for files as well as other information such as the content type
-const SessionHandler = require(__dirname + "/SessionHandler.js");
+const SessionHandlerFile = require(__dirname + "/SessionHandler.js");
+const SessionHandler = new SessionHandlerFile();
 
 //Configuration
 const pageDirectory = __dirname + "/pages/";//Directory of the individual page renderers
@@ -147,7 +148,7 @@ class Server {
 		var URLPath = url.parse(request.url).pathname;
 		this.log(3,URLPath);
 		var cookies = new Cookies(request,response);
-		var session = SessionHandler.getSession(request,response,cookies)
+		var session = SessionHandler.getSession(request,response,cookies);
 
 		//Check if the request should actually be routed to a page
 		if (this.routing.pages[URLPath]) {
