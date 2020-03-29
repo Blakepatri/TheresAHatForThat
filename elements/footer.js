@@ -3,9 +3,9 @@ Renderer for the footer
 **/
 function render() {
 return (`
-<div class="footer">
-	OH SNAP A FOOTER
-</div>
+  <footer>
+    <a href="/admin">admin</a>
+  </footer>
 `);
 }
 
