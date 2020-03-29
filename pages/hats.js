@@ -1,59 +1,59 @@
 function render() {
 	return (
 		`<div class="hats">
-			<div class="row_hats">
-  				<div class="column_hats">
-  					<img src="..\images\hat1.jpg" class="img_hats">
-  					<h1 class="h1_hats">Hat Of The Day</h1>
-            <h1 class="h1_hats">Hat Of The Day</h1>
-  				</div>
-  				<div class="column_hats">
-  					<img src="..\images\hat2.jpg" class="img_hats">
-            <h1 class="h1_hats">Hat Of The Day</h1>
-            <h1 class="h1_hats">Hat Of The Day</h1>					
-  				</div>
-  				<div class="column_hats">
-  					<img src="..\images\hat3.jpg" class="img_hats">
-            <h1 class="h1_hats">Hat Of The Day</h1>
-            <h1 class="h1_hats">Hat Of The Day</h1>					
-  				</div>
+      <div class="row_hats">
           <div class="column_hats">
-            <img src="..\images\hat3.jpg" class="img_hats">
-            <h1 class="h1_hats">Hat Of The Day</h1>
-            <h1 class="h1_hats">Hat Of The Day</h1>         
+            <img src="..\images\hat1.jpg" class="img_hats">
+            <h1 class="h1_hats">name</h1>
+            <h1 class="h1_hats">price</h1>
+          </div>
+          <div class="column_hats">
+            <img src="..\images\hat2.jpg" class="img_hats">
+            <h1 class="h1_hats">name</h1>
+            <h1 class="h1_hats">price</h1>          
           </div>
           <div class="column_hats">
             <img src="..\images\hat3.jpg" class="img_hats">
-            <h1 class="h1_hats">Hat Of The Day</h1>
-            <h1 class="h1_hats">Hat Of The Day</h1>         
+            <h1 class="h1_hats">name</h1>
+            <h1 class="h1_hats">price</h1>          
           </div>
           <div class="column_hats">
             <img src="..\images\hat3.jpg" class="img_hats">
-            <h1 class="h1_hats">Hat Of The Day</h1>
-            <h1 class="h1_hats">Hat Of The Day</h1>         
+            <h1 class="h1_hats">name</h1>
+            <h1 class="h1_hats">price</h1>         
           </div>
           <div class="column_hats">
             <img src="..\images\hat3.jpg" class="img_hats">
-            <h1 class="h1_hats">Hat Of The Day</h1>
-            <h1 class="h1_hats">Hat Of The Day</h1>         
+            <h1 class="h1_hats">name</h1>
+            <h1 class="h1_hats">price</h1>         
           </div>
           <div class="column_hats">
             <img src="..\images\hat3.jpg" class="img_hats">
-            <h1 class="h1_hats">Hat Of The Day</h1>
-            <h1 class="h1_hats">Hat Of The Day</h1>         
+            <h1 class="h1_hats">name</h1>
+            <h1 class="h1_hats">price</h1>         
           </div>
           <div class="column_hats">
             <img src="..\images\hat3.jpg" class="img_hats">
-            <h1 class="h1_hats">Hat Of The Day</h1>
-            <h1 class="h1_hats">Hat Of The Day</h1>         
+            <h1 class="h1_hats">name</h1>
+            <h1 class="h1_hats">price</h1>         
           </div>
           <div class="column_hats">
             <img src="..\images\hat3.jpg" class="img_hats">
-            <h1 class="h1_hats">Hat Of The Day</h1>
-            <h1 class="h1_hats">Hat Of The Day</h1>         
+            <h1 class="h1_hats">name</h1>
+            <h1 class="h1_hats">price</h1>         
+          </div>
+          <div class="column_hats">
+            <img src="..\images\hat3.jpg" class="img_hats">
+            <h1 class="h1_hats">name</h1>
+            <h1 class="h1_hats">price</h1>         
+          </div>
+          <div class="column_hats">
+            <img src="..\images\hat3.jpg" class="img_hats">
+            <h1 class="h1_hats">name</h1>
+            <h1 class="h1_hats">price</h1>         
           </div>                                                                      
-			</div>
-		</div>`
+      </div>
+    </div>`
 	);
 }
 

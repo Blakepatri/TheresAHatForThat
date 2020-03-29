@@ -93,14 +93,23 @@ img {
 }
 h1 {
   width: 300px;
-  padding:1px;
-  border:1px solid #021a40;
+  padding: 20px;
+  padding-left: 160px;
+  text-align: center;
+}
+.your-items {
+  text-align: center;
+  padding-left: 800px;
+}
+.items-extra {
+  padding-left: 800px;
+  padding-right: 800px;
   text-align: center;
 }
 .h1_hats {
   width: 200px;
   padding:1px;
-  border:1px solid #021a40;
+  padding-left: 87px;
   font-size: 18px;
 
 }
