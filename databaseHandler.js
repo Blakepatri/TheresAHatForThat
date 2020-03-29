@@ -1,16 +1,24 @@
-const db = require(__dirname + '/database.js');
+const fs = require('fs');
 const mysql = require('mysql');
+const database = require(__dirname + '/database.js');
+const DBConfig = __dirname + "/config/database.json";
 
 class databaseHandler{
+      constructor() {
+        fs.readFile(DBConfig, 'utf8', (err,data) => {this.initDB(err,data)});
+      }
 
-      const db = database('database.json');
-
-      let pool = db.createConnPool();
+      //Read the config data and pass it off to the database class
+      initDB(err,data) {
+        console.log("Initializing databaseHandler from config: " + DBConfig);
+        this.db = new database(data);
+        this.pool = this.db.createConnPool();
+        console.log("databaseHandler init finished");
+      }
 
       queryDatabase(query){
-
         //Checkout a connection to use from the pool.
-        pool.getConnection(function(err, connection) {
+        this.pool.getConnection(function(err, connection) {
           if (err) throw err; // not connected!
 
           //Execute a query
@@ -22,10 +30,8 @@ class databaseHandler{
             // Handle error after the release.
             if (error) throw error;
 
-            //If there is no error return thre results.
+            //If there is no error return the results.
             else return results;
-
-
           });
         });
       };
@@ -222,3 +228,5 @@ class databaseHandler{
       }
 
 }
+
+module.exports = databaseHandler;

@@ -6,7 +6,7 @@ const fs = require('fs');
 const Session = require(__dirname + '/Session.js');
 
 const algorithm = 'aes-256-cbc';
-const encryptionConfig = __dirname + "/config/encryption.json"
+const encryptionConfig = __dirname + "/config/encryption.json";
 
 class SessionHandler {
 	constructor() {

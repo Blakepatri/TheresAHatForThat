@@ -2,9 +2,7 @@
 Class to represent datbase connections.
 */
 
-
 const mysql = require('mysql');
-
 
 class database {
 
@@ -19,7 +17,7 @@ class database {
     else{
 
       //parse the JSON file for the login info
-      connData = JSON.parse(login);
+      var data = JSON.parse(login);
 
       //Check that all the required fields are completed
       if(!data.host || !data.port || !data.user || !data.pass){
@@ -38,7 +36,6 @@ class database {
 
   //A Method to create a connection pool
   createConnPool(){
-
     //Create a connection pool
     let pool = mysql.createPool({
       connectionLimit:10,
@@ -71,4 +68,4 @@ class database {
   }
 }
 
-module.exports = pool;
+module.exports = database;
