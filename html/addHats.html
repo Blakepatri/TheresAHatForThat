@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<link rel="stylesheet" type="text/css" href="..\css\css.css">
+		<title>${page.title}</title>
+	</head>
+	<body>
+		<div class="nav-bar">
+			<a class="active" href="#home">Home</a>
+  			<div class="nav-bar-right">
+    			<a href="#hats">Hats</a>
+    			<a href="#account">Account</a>
+    			<a href="#order">Orders</a>
+    			<a href="#about">Abou</a>
+    			<a href="#log-out">Log Out</a>
+    			<a href="#search">Search</a>
+  			</div>
+		</div>
+
+		<div class="add-hats">
+            <form>
+                <label for="name"><b>Hat Name</b></label>
+                <input type="text" name="name">
+
+                <label for="desc"><b>Description</b></label>
+                <input type="text" name="desc">
+
+                <label for="price"><b>Price</b></label>
+                <input type="text" name="price">
+
+                <label for="img"><b>Add image</b></label>
+                <input type="file" id="img" name="img" accept="images/*">
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+
+	</body>
+</html>
