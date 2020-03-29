@@ -1,6 +1,7 @@
 {
 	"host":"localhost",
 	"port":1111,
-	"user":"admin",
+	"user":"root",
+	"database":"TAHFT_DB",
 	"pass":"MapleLeafsSuck"
 }

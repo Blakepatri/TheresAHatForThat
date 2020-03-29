@@ -3,6 +3,7 @@ A function to handle registering users
 */
 function API(req,res,cookies,SessionHandler,db) {
 	console.log("New user registration");
+
 	//First check if the email exists in the database
 	if (!db.userExists()) {
 
