@@ -78,7 +78,7 @@ class SessionHandler {
 		}
 		catch(err) {
 			console.log("There was an error decrypting a session cookie. It might have been tampered",err);
-			session = null
+			session = null;
 		}
 
 
