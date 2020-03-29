@@ -18,6 +18,7 @@ const PageRenderer = require(__dirname + "/PageRenderer.js");//Primary page rend
 const FileHandler = require(__dirname + "/FileHandler.js");//Gets read streams for files as well as other information such as the content type
 const SessionHandlerFile = require(__dirname + "/SessionHandler.js");
 const SessionHandler = new SessionHandlerFile();
+const databaseHandler = require(__dirname + "/databaseHandler.js");
 
 //Configuration
 const pageDirectory = __dirname + "/pages/";//Directory of the individual page renderers
@@ -97,6 +98,7 @@ class Server {
 	initAPI() {
 		this.log(0,"Beginning API init.");
 		this.FileHandler = new FileHandler();
+		this.db = new databaseHandler();
 
 		for (var api in this.routing.api) {
 			this.log(0,"API found: " + api);
@@ -160,8 +162,8 @@ class Server {
 		else if (this.routing.api[URLPath]) {
 			var api = this.routing.api[URLPath];
 			this.log(4,"API information:",api);
-			//Call the API function from the API object, SessionHandler and Cookies do not necessarily need to be handled by the API
-			api.API(request,response,cookies,this.SessionHandler);
+			//Call the API function from the API object, SessionHandler, databaseHandler, and Cookies do not necessarily need to be handled by the API
+			api.API(request,response,cookies,this.SessionHandler,this.db);
 		}
 		//Check if it should try and serve a file or image
 		else if (URLPath.search(/^(\/images\/)/i) > -1) {
