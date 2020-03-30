@@ -20,14 +20,14 @@ class database {
       var data = JSON.parse(login);
 
       //Check that all the required fields are completed
-      if(!data.host || !data.port || !data.user || !data.pass){
-        throw "Error: Incomplete login information";
+      if(!data.host || !data.port || !data.user || !data.password){
+        throw "Error: Incomplete database login information";
       }
       //Set the variables required to create a conection.
       else{
         this.user = data.user;
         this.host = data.host;
-        this.password = data.pass;
+        this.password = data.password;
         this.port = data.port;
         this.database = data.database
       }
@@ -41,7 +41,7 @@ class database {
       connectionLimit:10,
       host: this.host,
       user: this.user,
-      password: this.pass,
+      password: this.password,
       database: this.database
     })
 
@@ -51,12 +51,16 @@ class database {
         if(err.code === 'PROTOCOL_CONNECTION_LOST'){
           throw "Error: connection to database was closed";
         }
-        if(err.code === 'ER_CON_COUNT_ERROR'){
+        else if(err.code === 'ER_CON_COUNT_ERROR'){
           throw "Error: too many connections to database";
         }
-        if(err.code === 'ECONNREFUSED'){
+        else if(err.code === 'ECONNREFUSED' || err.code ==='ER_ACCESS_DENIED_ERROR'){
           throw "Error: connection to database was refused";
         }
+        else if (err.code === "ER_DUP_ENTRY") {
+          throw "Error: duplicate unique entry" + err;
+        }
+
       }
 
       //Release the connection back to the pool

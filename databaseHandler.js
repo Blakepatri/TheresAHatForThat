@@ -2,6 +2,8 @@ const fs = require('fs');
 const mysql = require('mysql');
 const database = require(__dirname + '/database.js');
 const DBConfig = __dirname + "/config/database.json";
+//Initialize the db object as global so it can be passed around through all of the promises.
+var db;
 
 class databaseHandler{
       constructor() {
@@ -11,30 +13,33 @@ class databaseHandler{
       //Read the config data and pass it off to the database class
       initDB(err,data) {
         console.log("Initializing databaseHandler from config: " + DBConfig);
-        this.db = new database(data);
-        this.db.createConnPool();
+        db = new database(data);
+        db.createConnPool();
         console.log("databaseHandler init finished");
       }
 
-      queryDatabase(query){
-        //Checkout a connection to use from the pool.
-        this.db.pool.getConnection(function(err, connection) {
-          if (err) throw err; // not connected!
+      queryDatabase(query) {
+        console.log("QUERYING DB: " + query);
+        return new Promise(function(resolve,reject) {
+          //Checkout a connection to use from the pool.
+          db.pool.getConnection(function(err, connection) {
+            if (err) reject(err); // not connected!
 
-          //Execute a query
-          connection.query(query, function (error, results, fields) {
+            //Execute a query
+            connection.query(query, function (error, results, fields) {
 
-            //Release the connection back to the pool
-            connection.release();
+              //Release the connection back to the pool
+              connection.release();
 
-            // Handle error after the release.
-            if (error) throw error;
+              // Handle error after the release.
+              if (error) reject(error);
 
-            //If there is no error return the results.
-            else return results;
+              //If there is no error return the results.
+              else resolve(results);
+            });
           });
         });
-      };
+      }
 
       //Creates a new session entry
       addSession(){
@@ -53,18 +58,16 @@ class databaseHandler{
 
       //Verify user for log in
       getUser(email, pass){
-
-        query = "SELECT * FROM Users WHERE email = ? AND password = ?";
-        variables = [email, pass];
+        var query = "SELECT * FROM Users WHERE email = ? AND password = ?";
+        var variables = [email, pass];
         query = mysql.format(query, variables);
 
         return this.queryDatabase(query);
-
       }
 
       //Checks if the user already exists
       checkUser(email){
-        var query = "SELECT * FROM Users WHERE email = ?;";
+        var query = "SELECT email FROM Users WHERE email = ?;";
         var variables = [email];
         query = mysql.format(query, variables);
         return this.queryDatabase(query);
@@ -72,14 +75,10 @@ class databaseHandler{
 
       //Add a new user
       addUser(email, pass, salt, firstName, lastName){
-
-        query = `INSERT INTO Users (email, password, salt, FirstName, LastName)
-        VALUES (?, ?, ?, ?, ?)`;
-        variables = [email, pass, salt, firstName, lastName];
+        var query = `INSERT INTO Users (email, password, salt, FirstName, LastName) VALUES (?, ?, ?, ?, ?)`;
+        var variables = [email, pass, salt, firstName, lastName];
         query = mysql.format(query, variables);
-
         return this.queryDatabase(query);
-
       }
 
       //Creates a new admin entry

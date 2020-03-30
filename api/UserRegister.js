@@ -1,4 +1,5 @@
 const qs = require('querystring');
+const crypto = require('crypto');
 //Credit to: https://emailregex.com/
 const emailRegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/g;
 
@@ -26,14 +27,43 @@ function API(req,res,cookies,SessionHandler,db) {
 		    if (isEmailValid(postData["email"]) && isValidPassword(postData["psw"],postData["psw-confirm"])) {
 		    	console.log("Email and password are valid");
 		    	console.log(db.checkUser(postData["email"]));
+
+		    	/*if (!db.checkUser(postData["email"])) {
+		    		//User doesn't exist yet, create one
+		    		//In an ideal world the salt would be unique to the user.
+		    		var salt = "TAHFT_Sombrero";
+		    		var password = postData["psw"] + salt;
+		    		var hashedPass = crypto.createHash('sha256').update(password).digest('hex');
+					db.addUser(postData["email"], hashedPass, salt, " ", " ");
+		    	}
+		    	else {
+		    		console.log("Error, user already exists: " + postData["email"]);
+		    		regError = true;
+		    	}*/
+
+		    	var salt = "TAHFT_Sombrero";
+	    		var password = postData["psw"] + salt;
+	    		var hashedPass = crypto.createHash('sha256').update(password).digest('hex');
+
+		    	db.addUser(postData["email"], hashedPass, salt, " ", " ")
+		    	.then(function(results) {
+		    		console.log(results);
+		    	})
+		    	.catch(function(err) {
+		    		console.log(err.code);
+		    		if (err.code === "ER_DUP_ENTRY") {
+		    			console.log("Error, user trying to register multiple times: " + postData["email"]);
+		    			sendError(res,200,"Sorry, but that email is already in use");
+		    		}
+		    		else {
+
+		    		}
+		    	});
 		    }
 		    else {
-		    	regError = true;
+		    	sendError(res,200,"Sorry, but that email or password is not valid");
 		    }
 		});
-	}
-	else {
-
 	}
 }
 
@@ -73,6 +103,21 @@ function isValidPassword(pass,passConfirm) {
 	}
 
 	return isValid;
+}
+
+function sendError(res,code,message) {
+	try {
+		res.setHeader('Access-Control-Allow-Headers', 'authorization, content-type');
+	    res.writeHead(code, {
+	        'Content-Type': "text/html"
+	    });
+	    res.write(message);
+	    res.end();
+	}
+	catch(err) {
+		console.log(err);
+	}
+	
 }
 
 //Should always be API so the server can call it
