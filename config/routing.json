@@ -27,7 +27,63 @@
 			"navbar":true,
 			"loggedIn":true,
 			"admin":0
-		}
+		},
+		"/account": {
+			"file":"account.js",
+			"title":"Account",
+			"navbar":true,
+			"loggedIn":true,
+			"admin":0
+		},
+		"/addHats": {
+			"file":"addHats.js",
+			"title":"Add Hats",
+			"navbar":true,
+			"loggedIn":true,
+			"admin":0
+		},
+		"/addProm": {
+			"file":"addProm.js",
+			"title":"Add Prom",
+			"navbar":true,
+			"loggedIn":true,
+			"admin":0
+		},
+		"/admin": {
+			"file":"admin.js",
+			"title":"Admin",
+			"navbar":true,
+			"loggedIn":true,
+			"admin":0
+		},
+		"/cart": {
+			"file":"cart.js",
+			"title":"Cart",
+			"navbar":true,
+			"loggedIn":true,
+			"admin":0
+		},
+		"/hats": {
+			"file":"hats.js",
+			"title":"Hats",
+			"navbar":true,
+			"loggedIn":false,
+			"admin":0
+		},
+		"/item": {
+			"file":"item.js",
+			"title":"item",
+			"navbar":true,
+			"loggedIn":false,
+			"admin":0
+		},
+		"/orders": {
+			"file":"account.js",
+			"title":"Add Prom",
+			"navbar":true,
+			"loggedIn":true,
+			"admin":0
+		},
 	},
 	"api": {
 		"/user_login": {
