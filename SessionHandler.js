@@ -56,8 +56,6 @@ class SessionHandler {
 		
 		if (newSession) {
 			//Encrypt the session to be sent back
-			console.log("ENCRYPTED SESSION STRING: ");
-			console.log(this.encryptSession(newSession));
 			cookies.set("TAHFT",this.encryptSession(newSession));
 			this.sessions[userId] = newSession;
 			return true;
