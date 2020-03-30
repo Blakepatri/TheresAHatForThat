@@ -6,7 +6,7 @@ constructor:
 function render() {
 	return (
 		`<div class="login">
-			<form>
+			<form action="/user_login" method="POST">
         		<div class="container">
             		<label for="uname"><b>Username</b></label>
             		<input type="text" placeholder="Enter Username" name="uname" required>

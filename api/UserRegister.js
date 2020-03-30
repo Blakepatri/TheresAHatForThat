@@ -38,7 +38,7 @@ function API(req,res,cookies,SessionHandler,db) {
 		    			db.addUser(postData["email"], hashedPass, salt, " ", " ")
 				    	.then(function(results) {
 				    		console.log("Registered new user: " + postData["email"]);
-				    		res.writeHead(301, { Location: '/index' });
+				    		res.writeHead(301, { Location: '/login' });
 				    		res.end();
 				    	})
 				    	.catch(function(err) {
@@ -115,7 +115,6 @@ function sendError(res,code,message) {
 	catch(err) {
 		console.log(err);
 	}
-	
 }
 
 //Should always be API so the server can call it

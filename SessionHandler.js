@@ -77,16 +77,16 @@ class SessionHandler {
 			session = JSON.parse(decipheredString);
 		}
 		catch(err) {
-			console.log("There was an error decrypting a session cookie. It might have been tampered",err);
+			console.log("There was an error decrypting a session cookie. It might have been tampered with.",err);
 			session = null;
 		}
-
 
 		return session;
 	}
 
 	//Start a new session, returns true if succesful, false otherwise
 	startSession(cookies,userID,username,admin) {
+		console.log("STARTING SESSION: ",userID,username,admin);
 		var newSession = null;
 
 		if (!admin) {
@@ -95,22 +95,26 @@ class SessionHandler {
 
 		if (this.sessions[userID]) {
 			//This user is already logged in, don't know why a new session is trying to be started
-			session = this.sessions[userID];
-			session.last = Date.now();
+			newSession = this.sessions[userID];
+			newSession.last = Date.now();
 		}
 		else {
 			try {
-				newSession = new Session(userID,username,0);
+				newSession = new Session(userID,username,admin);
 			}
 			catch(err) {
-				console.log("error creating session");
+				console.log("Error creating session: ",err);
 				newSession = null;
 			}
 		}
+
+		console.log(this.sessions);
+		console.log(newSession);
 		
 		if (newSession) {
 			//Encrypt the session to be sent back
-			cookies.set("THAFT",encryptSession(newSession));
+			cookies.set("THAFT",this.encryptSession(newSession));
+			this.sessions[userID] = newSession;
 			return true;
 		}
 		else {

@@ -4,10 +4,13 @@ The session Object that is kept track of by SessionHandler
 
 class Session {
 	constructor(id,username,admin) {
-		if (!username || !id || !admin) {
+		if (!username || !id) {
 			throw "Error, attempting to start a session without critical data";
 		}
 		else {
+			if (!admin) {
+				admin = 0;
+			}
 			this.id = id;
 			this.username = username;
 			this.admin = admin;

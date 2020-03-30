@@ -17,7 +17,6 @@ const Cookies = require('cookies');
 const PageRenderer = require(__dirname + "/PageRenderer.js");//Primary page renderer, combines nav, pages, and the footer.
 const FileHandler = require(__dirname + "/FileHandler.js");//Gets read streams for files as well as other information such as the content type
 const SessionHandlerFile = require(__dirname + "/SessionHandler.js");
-const SessionHandler = new SessionHandlerFile();
 const databaseHandler = require(__dirname + "/databaseHandler.js");
 
 //Configuration
@@ -99,6 +98,7 @@ class Server {
 		this.log(0,"Beginning API init.");
 		this.FileHandler = new FileHandler();
 		this.db = new databaseHandler();
+		this.SessionHandler = new SessionHandlerFile();
 
 		for (var api in this.routing.api) {
 			this.log(0,"API found: " + api);
@@ -150,7 +150,9 @@ class Server {
 		var URLPath = url.parse(request.url).pathname;
 		this.log(3,URLPath);
 		var cookies = new Cookies(request,response);
-		var session = SessionHandler.getSession(request,response,cookies);
+		var session = this.SessionHandler.getSession(request,response,cookies);
+		console.log("SESSION: ");
+		console.log(session);
 
 		//Check if the request should actually be routed to a page
 		if (this.routing.pages[URLPath]) {
@@ -167,19 +169,19 @@ class Server {
 		}
 		//Check if it should try and serve a file or image
 		else if (URLPath.search(/^(\/images\/)/i) > -1) {
-			this.log(4,"image information:",URLPath);
+			this.log(5,"image information:",URLPath);
 			this.FileResponse(request,response,URLPath,"images");
 		}
 		else if (URLPath.search(/^(\/scripts\/)/i) > -1) {
-			this.log(4,"script information:",URLPath);
+			this.log(5,"script information:",URLPath);
 			this.FileResponse(request,response,URLPath,"scripts");
 		}
 		else if (URLPath.search(/^(\/css\/)/i) > -1) {
-			this.log(4,"script information:",URLPath);
+			this.log(5,"script information:",URLPath);
 			this.FileResponse(request,response,URLPath,"css");
 		}
 		else if (URLPath.search(/^(\/files\/)/i) > -1) {
-			this.log(4,"script information:",URLPath);
+			this.log(5,"script information:",URLPath);
 			this.FileResponse(request,response,URLPath,"files");
 		}
 		//No routing info, send 404
@@ -219,7 +221,7 @@ class Server {
 	FileResponse(request,response,URLPath,fileFolder) {
 		var fileName = path.basename(URLPath);
 		var file = this.FileHandler.getFile(fileName,fileFolder);
-		this.log(4,"File response: ",file);
+		this.log(5,"File response: ",file);
 		if (file && file.readStream) {
 			response.setHeader('Access-Control-Allow-Headers', 'authorization, content-type');
 			response.writeHead(200, {

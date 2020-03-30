@@ -37,9 +37,9 @@ class PageRenderer {
 				<title>TAHFT - ${page.title}</title>
 			</head>
 			<body>
-				${nav.render()}
-				${page.render()}
-				${footer.render()}
+				${nav.render(session)}
+				${page.render(session)}
+				${footer.render(session)}
 			</body>
 			</html>
 		`);

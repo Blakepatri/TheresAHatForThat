@@ -57,7 +57,7 @@ class databaseHandler{
       };
 
       //Verify user for log in
-      getUser(email, pass){
+      getUserForLogin(email, pass){
         var query = "SELECT * FROM Users WHERE email = ? AND password = ?";
         var variables = [email, pass];
         query = mysql.format(query, variables);
