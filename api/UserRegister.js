@@ -24,23 +24,7 @@ function API(req,res,cookies,SessionHandler,db) {
 		  	var postData = qs.parse(body);
 		  	console.log(postData);
 
-		    if (isEmailValid(postData["email"]) && isValidPassword(postData["psw"],postData["psw-confirm"])) {
-		    	console.log("Email and password are valid");
-		    	console.log(db.checkUser(postData["email"]));
-
-		    	/*if (!db.checkUser(postData["email"])) {
-		    		//User doesn't exist yet, create one
-		    		//In an ideal world the salt would be unique to the user.
-		    		var salt = "TAHFT_Sombrero";
-		    		var password = postData["psw"] + salt;
-		    		var hashedPass = crypto.createHash('sha256').update(password).digest('hex');
-					db.addUser(postData["email"], hashedPass, salt, " ", " ");
-		    	}
-		    	else {
-		    		console.log("Error, user already exists: " + postData["email"]);
-		    		regError = true;
-		    	}*/
-
+		    if (isEmailValid(postData["email"]) && isPasswordValid(postData["psw"],postData["psw-confirm"])) {
 		    	var salt = "TAHFT_Sombrero";
 	    		var password = postData["psw"] + salt;
 	    		var hashedPass = crypto.createHash('sha256').update(password).digest('hex');
@@ -56,14 +40,17 @@ function API(req,res,cookies,SessionHandler,db) {
 		    			sendError(res,200,"Sorry, but that email is already in use");
 		    		}
 		    		else {
-
+		    			sendError(res,500,"Sorry, something went wrong when processing your request.");
 		    		}
 		    	});
 		    }
 		    else {
-		    	sendError(res,200,"Sorry, but that email or password is not valid");
+		    	sendError(res,200,"Sorry, but that email or password is not valid.");
 		    }
 		});
+	}
+	else {
+		sendError(res,500,"Sorry, something went wrong when processing your request.");
 	}
 }
 
@@ -95,7 +82,7 @@ function isEmailValid(email) {
 }
 
 //Checks if the password is valid, returns true if it is, false otherwise
-function isValidPassword(pass,passConfirm) {
+function isPasswordValid(pass,passConfirm) {
 	var isValid = true;
 
 	if (!pass || !passConfirm || pass !== passConfirm || !pass.length || pass.length < 10 || pass.length > 1024) {
