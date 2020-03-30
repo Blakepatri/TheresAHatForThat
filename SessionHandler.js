@@ -6,7 +6,7 @@ const fs = require('fs');
 const Session = require(__dirname + '/Session.js');
 
 const algorithm = 'aes-256-cbc';
-const encryptionConfig = "config/encryption.json"
+const encryptionConfig = __dirname + "/config/encryption.json";
 
 class SessionHandler {
 	constructor() {
@@ -32,12 +32,12 @@ class SessionHandler {
 	}
 
 	//Decrypt and parse session info sent from a user, returns null if there is an error.
-	getSession(req,res) {
+	getSession(req,res,cookies) {
 		var sessionCookieString = cookies.get('TAHFT');
 		var sessionCookie = null;
 		var session = null;
 
-		if (sessionString) {
+		if (sessionCookieString) {
 			//Decrypt the cookie into a JSON object
 			sessionCookie = decryptSession(sessionCookie);
 		}

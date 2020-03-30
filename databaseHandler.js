@@ -1,34 +1,45 @@
-const db = require(__dirname + '/database.js');
+const fs = require('fs');
 const mysql = require('mysql');
+const database = require(__dirname + '/database.js');
+const DBConfig = __dirname + "/config/database.json";
+//Initialize the db object as global so it can be passed around through all of the promises.
+var db;
 
 class databaseHandler{
+      constructor() {
+        fs.readFile(DBConfig, 'utf8', (err,data) => {this.initDB(err,data)});
+      }
 
-      const db = database('database.json');
+      //Read the config data and pass it off to the database class
+      initDB(err,data) {
+        console.log("Initializing databaseHandler from config: " + DBConfig);
+        db = new database(data);
+        db.createConnPool();
+        console.log("databaseHandler init finished");
+      }
 
-      let pool = db.createConnPool();
+      queryDatabase(query) {
+        console.log("QUERYING DB: " + query);
+        return new Promise(function(resolve,reject) {
+          //Checkout a connection to use from the pool.
+          db.pool.getConnection(function(err, connection) {
+            if (err) reject(err); // not connected!
 
-      queryDatabase(query){
+            //Execute a query
+            connection.query(query, function (error, results, fields) {
 
-        //Checkout a connection to use from the pool.
-        pool.getConnection(function(err, connection) {
-          if (err) throw err; // not connected!
+              //Release the connection back to the pool
+              connection.release();
 
-          //Execute a query
-          connection.query(query, function (error, results, fields) {
+              // Handle error after the release.
+              if (error) reject(error);
 
-            //Release the connection back to the pool
-            connection.release();
-
-            // Handle error after the release.
-            if (error) throw error;
-
-            //If there is no error return thre results.
-            else return results;
-
-
+              //If there is no error return the results.
+              else resolve(results);
+            });
           });
         });
-      };
+      }
 
       //Creates a new session entry
       addSession(){
@@ -47,30 +58,27 @@ class databaseHandler{
 
       //Verify user for log in
       getUser(email, pass){
-
-        query = "SELECT * FROM Users WHERE email = ? AND password = ?";
-        variables = [email, pass];
+        var query = "SELECT * FROM Users WHERE email = ? AND password = ?";
+        var variables = [email, pass];
         query = mysql.format(query, variables);
 
-        return queryDatabase(query);
-
+        return this.queryDatabase(query);
       }
 
       //Checks if the user already exists
-      checkUser(){
-        
+      checkUser(email){
+        var query = "SELECT email FROM Users WHERE email = ?;";
+        var variables = [email];
+        query = mysql.format(query, variables);
+        return this.queryDatabase(query);
       }
 
       //Add a new user
       addUser(email, pass, salt, firstName, lastName){
-
-        query = `INSERT INTO Users (email, password, salt, FirstName, LastName)
-        VALUES (?, ?, ?, ?, ?)`;
-        variables = [email, pass, salt, firstName, lastName];
+        var query = `INSERT INTO Users (email, password, salt, FirstName, LastName) VALUES (?, ?, ?, ?, ?)`;
+        var variables = [email, pass, salt, firstName, lastName];
         query = mysql.format(query, variables);
-
-        return queryDatabase(query);
-
+        return this.queryDatabase(query);
       }
 
       //Creates a new admin entry
@@ -100,7 +108,7 @@ class databaseHandler{
         variables = [email, pass];
         query = mysql.format(query, variables);
 
-        return queryDatabase(query);
+        return this.queryDatabase(query);
 
       }
 
@@ -111,7 +119,7 @@ class databaseHandler{
         variables = [newPass, userName, oldPass];
         query = mysql.format(query, variables);
 
-        queryDatabase(query);
+        this.queryDatabase(query);
 
       }
 
@@ -122,7 +130,7 @@ class databaseHandler{
         varaibles = [id, id];
         query = mysql.format(query, variables);
 
-        return queryDatabase(query);
+        return this.queryDatabase(query);
 
       }
 
@@ -134,7 +142,7 @@ class databaseHandler{
         variables = [name, desc];
         query = mysl.format(query, variables);
 
-        queryDatabase(query);
+        this.queryDatabase(query);
       }
 
       //Delte a product from the database by name or id
@@ -144,7 +152,7 @@ class databaseHandler{
         variables = [id, id];
         query = mysql.format(query, variables);
 
-        queryDatabase(query);
+        this.queryDatabase(query);
 
       }
 
@@ -189,7 +197,7 @@ class databaseHandler{
         query = 'SELECT * FROM Orders WHERE invoiceNum = ?';
         query = mysql.format(query, id);
 
-        return queryDatabase(query);
+        return this.queryDatabase(query);
 
       }
 
@@ -198,7 +206,7 @@ class databaseHandler{
 
         query = '';
 
-        return queryDatabase(query);
+        return this.queryDatabase(query);
 
       }
 
@@ -208,7 +216,7 @@ class databaseHandler{
         query = 'UPDATE Orders SET isShipped = 1 WHERE invoiceNum = ?';
         query = mysql.format(query, id);
 
-        queryDatabase(query);
+        this.queryDatabase(query);
 
       }
 
@@ -218,7 +226,9 @@ class databaseHandler{
         variables = [id,num];
         query = mysql.format(query, variables);
 
-        queryDatabase(query);
+        this.queryDatabase(query);
       }
 
 }
+
+module.exports = databaseHandler;

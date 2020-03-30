@@ -16,6 +16,14 @@
 		},
 		"/logout": {
 			"file":"Logout.js",
+			"title":"Logout",
+			"navbar":true,
+			"loggedIn":true,
+			"admin":0
+		},
+		"/register": {
+			"file":"Registration.js",
+			"title":"Register",
 			"navbar":true,
 			"loggedIn":true,
 			"admin":0
@@ -29,6 +37,10 @@
 		"/user_logout": {
 			"file":"UserLogout.js",
 			"admin":0
-		}		
+		},
+		"/register_user": {
+			"file":"UserRegister.js",
+			"admin":0
+		}	
 	}
 }

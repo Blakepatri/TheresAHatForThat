@@ -23,13 +23,18 @@ class PageRenderer {
 		var nav = this.nav;
 		var footer = this.footer;
 
+		//Placeholder in case there isn't a title set, better than undefined
+		if (!page.title) {
+			page.title = " ";
+		}
+
 		return (`
 		  	<!DOCTYPE html>
 			<html lang="en">
 			<head>
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-				<link rel="stylesheet" type="text/css" href="..\css\css.css">
-				<title>${page.title}</title>
+				<link rel="stylesheet" type="text/css" href="/css/css.css">
+				<title>TAHFT - ${page.title}</title>
 			</head>
 			<body>
 				${nav.render()}

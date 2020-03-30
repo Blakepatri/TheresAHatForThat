@@ -19,11 +19,11 @@ USE `TAHFT_DB` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `TAHFT_DB`.`Users` (
   `userId` INT NOT NULL AUTO_INCREMENT,
-  `email` VARCHAR(50) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
-  `salt` VARCHAR(45) NOT NULL,
-  `FirstName` VARCHAR(45) NULL,
-  `LastName` VARCHAR(45) NULL,
+  `email` VARCHAR(256) NOT NULL,
+  `password` VARCHAR(64) NOT NULL,
+  `salt` VARCHAR(64) NOT NULL,
+  `FirstName` VARCHAR(256) NULL,
+  `LastName` VARCHAR(256) NULL,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC),
   PRIMARY KEY (`userId`))
 ENGINE = InnoDB;
@@ -199,3 +199,4 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+`orders_has_product variants`
