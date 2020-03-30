@@ -31,30 +31,40 @@ class SessionHandler {
 		}
 	}
 
-	//Decrypt and parse session info sent from a user, returns null if there is an error.
-	getSession(req,res,cookies) {
-		var sessionCookieString = cookies.get('TAHFT');
-		var sessionCookie = null;
-		var session = null;
+	//Start a new session, returns true if succesful, false otherwise
+	startSession(cookies,userId,username,admin) {
+		var newSession = null;
 
-		if (sessionCookieString) {
-			//Decrypt the cookie into a JSON object
-			sessionCookie = decryptSession(sessionCookie);
+		if (!admin) {
+			admin = 0;
+		}
+
+		if (this.sessions[userId]) {
+			//This user is already logged in, don't know why a new session is trying to be started
+			newSession = this.sessions[userId];
+			newSession.last = Date.now();
+		}
+		else {
+			try {
+				newSession = new Session(userId,username,admin);
+			}
+			catch(err) {
+				console.log("Error creating session: ",err);
+				newSession = null;
+			}
 		}
 		
-		//User ID is something that MUST be set for this. If it is not then the session has been compromised somehow, return null.
-		if (sessionCookie && sessionCookie.userID) {
-			//session currently loaded in memory, grab it from there and refresh the last accessed time
-			if (this.sessions[userID]) {
-				session = this.sessions[userID];
-				session.last = Date.now();
-			}
-			else {
-				//GET SESSION FROM DATABASE
-			}
-		}		
-
-		return session;
+		if (newSession) {
+			//Encrypt the session to be sent back
+			console.log("ENCRYPTED SESSION STRING: ");
+			console.log(this.encryptSession(newSession));
+			cookies.set("TAHFT",this.encryptSession(newSession));
+			this.sessions[userId] = newSession;
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	//Encrypt the session
@@ -67,13 +77,42 @@ class SessionHandler {
 		return sessionString;
 	}
 
+	//Decrypt and parse session info sent from a user, returns null if there is an error.
+	getSession(req,res,cookies) {
+		console.log("GETTING SESSION: ");
+		var sessionCookieString = cookies.get('TAHFT');
+		console.log(sessionCookieString);
+		var sessionCookie = null;
+		var session = null;
+
+		if (sessionCookieString) {
+			//Decrypt the cookie into a JSON object
+			sessionCookie = this.decryptSession(sessionCookieString);
+		}
+		
+		//User ID is something that MUST be set for this. If it is not then the session has been compromised somehow, return null.
+		if (sessionCookie && sessionCookie.userId) {
+			var userId = sessionCookie.userId;
+			//session currently loaded in memory, grab it from there and refresh the last accessed time
+			if (this.sessions[userId]) {
+				session = this.sessions[userId];
+				session.last = Date.now();
+			}
+			else {
+				//GET SESSION FROM DATABASE
+			}
+		}		
+
+		return session;
+	}
+
 	//Decrypt the session. Returns an object or null if there was an error parsing it
 	decryptSession(sessionString) {
 		var session = null;
 		try {
 			var decipher = crypto.createDecipher('aes-256-cbc',this.SessionKey);
 			var decipheredString = decipher.update(sessionString,'base64','utf8');
-			decipheredString = decipher.final('utf8');
+			decipheredString += decipher.final('utf8');
 			session = JSON.parse(decipheredString);
 		}
 		catch(err) {
@@ -82,44 +121,6 @@ class SessionHandler {
 		}
 
 		return session;
-	}
-
-	//Start a new session, returns true if succesful, false otherwise
-	startSession(cookies,userID,username,admin) {
-		console.log("STARTING SESSION: ",userID,username,admin);
-		var newSession = null;
-
-		if (!admin) {
-			admin = 0;
-		}
-
-		if (this.sessions[userID]) {
-			//This user is already logged in, don't know why a new session is trying to be started
-			newSession = this.sessions[userID];
-			newSession.last = Date.now();
-		}
-		else {
-			try {
-				newSession = new Session(userID,username,admin);
-			}
-			catch(err) {
-				console.log("Error creating session: ",err);
-				newSession = null;
-			}
-		}
-
-		console.log(this.sessions);
-		console.log(newSession);
-		
-		if (newSession) {
-			//Encrypt the session to be sent back
-			cookies.set("THAFT",this.encryptSession(newSession));
-			this.sessions[userID] = newSession;
-			return true;
-		}
-		else {
-			return false;
-		}
 	}
 
 	//Called from UserLogout.js
