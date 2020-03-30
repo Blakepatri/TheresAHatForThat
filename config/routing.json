@@ -7,6 +7,13 @@
 			"loggedIn":false,
 			"admin":0
 		},
+		"/index": {
+			"title":"There's a Hat For That",
+			"file":"Home.js",
+			"navbar":false,
+			"loggedIn":false,
+			"admin":0
+		},
 		"/login": {
 			"title":"Login",
 			"file":"Login.js",

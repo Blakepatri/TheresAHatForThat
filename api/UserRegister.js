@@ -29,19 +29,30 @@ function API(req,res,cookies,SessionHandler,db) {
 	    		var password = postData["psw"] + salt;
 	    		var hashedPass = crypto.createHash('sha256').update(password).digest('hex');
 
-		    	db.addUser(postData["email"], hashedPass, salt, " ", " ")
-		    	.then(function(results) {
-		    		console.log(results);
-		    	})
-		    	.catch(function(err) {
-		    		console.log(err.code);
-		    		if (err.code === "ER_DUP_ENTRY") {
-		    			console.log("Error, user trying to register multiple times: " + postData["email"]);
-		    			sendError(res,200,"Sorry, but that email is already in use");
+	    		//DB operates asynchronously on promises
+	    		//First check if users exists with just the email
+	    		db.checkUser(postData["email"])
+	    		.then(function(results) {
+		    		if (results && results.length === 0) {
+		    			//user doesn't exist yet, add them
+		    			db.addUser(postData["email"], hashedPass, salt, " ", " ")
+				    	.then(function(results) {
+				    		console.log("Registered new user: " + postData["email"]);
+				    		res.writeHead(301, { Location: '/index' });
+				    		res.end();
+				    	})
+				    	.catch(function(err) {
+				    		console.log(err.code);
+				    		sendError(res,500,"Sorry, something went wrong when processing your request.");
+				    	});
 		    		}
 		    		else {
-		    			sendError(res,500,"Sorry, something went wrong when processing your request.");
+		    			//user exists
+		    			sendError(res,200,"Sorry, but that email is already in use");
 		    		}
+		    	})
+		    	.catch(function(err) {
+		    		sendError(res,500,"Sorry, something went wrong when processing your request.");
 		    	});
 		    }
 		    else {
