@@ -20,7 +20,10 @@ class PageRenderer {
 	}
 
 	//The function that actually creates the HTML for user requests.
-	render(page,session,hats) {
+	//Page object is what gets loaded from routing.json. 
+	//The render function is specified in that config and loaded from the appropriate file
+	//Not all pages need to take into account, sessions, hats, or queries.
+	render(page,session,hats,query) {
 		var nav = this.nav;
 		var footer = this.footer;
 
@@ -39,7 +42,7 @@ class PageRenderer {
 			</head>
 			<body>
 				${nav.render(session)}
-				${page.render(session,hats)}
+				${page.render(session,hats,query)}
 				${footer.render(session)}
 			</body>
 			</html>
