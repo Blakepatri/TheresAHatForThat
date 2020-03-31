@@ -123,15 +123,19 @@ class databaseHandler{
 
       }
 
+      //Get all of the hats.
+      getHats() {
+        query = 'SELECT * FROM products;';
+        return this.queryDatabase(query);
+      }
+
       //Find a product in the database by the name or the id.
       getProduct(id){
-
         query = 'SELECT * WHERE productName = ? OR productId = ?';
         varaibles = [id, id];
         query = mysql.format(query, variables);
 
         return this.queryDatabase(query);
-
       }
 
       //Add a new product to the database

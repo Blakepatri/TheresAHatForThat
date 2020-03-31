@@ -99,13 +99,15 @@ class Server {
 		this.FileHandler = new FileHandler();
 		this.db = new databaseHandler();
 		this.SessionHandler = new SessionHandlerFile();
+		this.Hats = new Hats(db);
 
+		//Essentially every API object has an API() function that gets called when a request is routed to it
 		for (var api in this.routing.api) {
 			this.log(0,"API found: " + api);
 			var currentAPI = this.routing.api[api];
 			currentAPI.API = require(APIDirectory + currentAPI.file).API;
 		}
-		this.log(0,"Finished API init.");
+		this.log(0,"Finished calling API init. functions, some may still be doing stuff in the background.");
 	}
 
 	//Initialize the server
