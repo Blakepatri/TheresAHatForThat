@@ -19,11 +19,11 @@ function renderHats(hats) {
   for(var hat in hats) {
     if (hats[hat].frontPage) {
       hatsHTML += `
-      <div class="column">
+      <a class="column" href="/hat?id=${hats[hat].id}">
         <img src="/images/${hats[hat].img}">
         <h1>${hats[hat].name}</h1>
         <h2>$${(hats[hat].price / 100).toFixed(2)}</h2>
-      </div>`;
+      </a>`;
     }
   }
 
