@@ -109,7 +109,7 @@ class Server {
 		this.db.createConnPool()
 		.then(function(results) {
 			console.log("DB setup complete, beginning to load hats.");
-			this.Hats.loadHats(db);
+			this.Hats.loadHats(this.db);
 		}.bind(this))
 		.catch(function(err) {
 			console.log(err);
