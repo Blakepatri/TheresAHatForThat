@@ -14,11 +14,14 @@ const url = require("url");
 const fs = require('fs');
 const path = require('path');
 const Cookies = require('cookies');
+const qs = require('querystring');
+
+//Various handler classes
 const PageRenderer = require(__dirname + "/PageRenderer.js");//Primary page renderer, combines nav, pages, and the footer.
 const FileHandler = require(__dirname + "/FileHandler.js");//Gets read streams for files as well as other information such as the content type
-const SessionHandlerFile = require(__dirname + "/SessionHandler.js");
-const databaseHandler = require(__dirname + "/databaseHandler.js");
-const Hats = require(__dirname + "/Hats.js");
+const SessionHandlerFile = require(__dirname + "/SessionHandler.js");//Handles starting,stopping, and checking sessions
+const databaseHandler = require(__dirname + "/databaseHandler.js");//Database queries
+const Hats = require(__dirname + "/Hats.js");//Hats.
 
 //Configuration
 const pageDirectory = __dirname + "/pages/";//Directory of the individual page renderers
@@ -94,7 +97,7 @@ class Server {
 		this.log(0,"Finished page rendering init.");
 	}
 
-	//Initializae the routing of the API
+	//Initialize the routing of the API
 	initAPI() {
 		this.log(0,"Beginning API init.");
 		//The class that handles serving files over HTTP
@@ -157,18 +160,24 @@ class Server {
 
 	//Handler for HTTP requests
 	HTTPRequest(request, response) {
-		var URLPath = url.parse(request.url).pathname;
+		var parsedURL = url.parse(request.url)
+		var URLPath = parsedURL.pathname;
+		var query;
+		try {
+			query = qs.parse(parsedURL.query);
+		}
+		catch(err) {
+			query = null;
+		}
 		this.log(3,URLPath);
 		var cookies = new Cookies(request,response);
 		var session = this.SessionHandler.getSession(request,response,cookies);
-		console.log("SESSION: ");
-		console.log(session);
 
 		//Check if the request should actually be routed to a page
 		if (this.routing.pages[URLPath]) {
 			var page = this.routing.pages[URLPath];
-			this.log(4,"Page information:",page);
-			this.HTMLResponse(request,response,page,session);
+			this.log(5,"Page information:",page);
+			this.HTMLResponse(request,response,page,session,query);
 		}
 		//Check if it should be routed to the API
 		else if (this.routing.api[URLPath]) {
@@ -201,12 +210,12 @@ class Server {
 	}
 
 	//A standard web page response
-	HTMLResponse(request,response,page,session) {
+	HTMLResponse(request,response,page,session,query) {
 		var renderingError = false;
 		var pageData = "";
 	    try {
-	    	//Use the PageRenderer to generate the page itself, pass in the hats so pages can use that data to render those
-	    	pageData = this.PageRenderer.render(page,session,this.Hats.hats);
+	    	//Use the PageRenderer to generate the page itself, pass in the hats so pages can use that data to render those, as well as a query object
+	    	pageData = this.PageRenderer.render(page,session,this.Hats.hats,query);
 	    }
 	    catch(err) {
 	    	renderingError = true;

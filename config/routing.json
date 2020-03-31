@@ -84,8 +84,8 @@
 			"loggedIn":false,
 			"admin":0
 		},
-		"/Hat": {
-			"file":"hats.js",
+		"/hat": {
+			"file":"Hat.js",
 			"title":"The Perfect Hat For You",
 			"navbar":false,
 			"loggedIn":false,
