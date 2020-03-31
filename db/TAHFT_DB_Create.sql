@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS `TAHFT_DB`.`Products` (
   `productDescription` TEXT NULL,
   `productPrice` INT NOT NULL,
   `productImage` VARCHAR(255) NOT NULL,
+  `isActive` TINYINT DEFAULT 1,
   `isFrontPage` TINYINT DEFAULT 0,
   PRIMARY KEY (`productID`),
   UNIQUE INDEX `productID_UNIQUE` (`productID` ASC))
