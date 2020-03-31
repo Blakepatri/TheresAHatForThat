@@ -101,10 +101,10 @@ class Server {
 		this.FileHandler = new FileHandler();
 		//The class that handles sessions
 		this.SessionHandler = new SessionHandlerFile();
-		//The class that handles storing keeping track of hats
-		this.Hats = new Hats();
 		//The class that handles database queries
 		this.db = new databaseHandler(this.dbInfo);
+		//The class that handles storing keeping track of hats, give it the DB so it can add, edit, and delete hats
+		this.Hats = new Hats(this.db);
 		//Create the connections, and once that's done load the hats
 		this.db.createConnPool()
 		.then(function(results) {
@@ -205,8 +205,8 @@ class Server {
 		var renderingError = false;
 		var pageData = "";
 	    try {
-	    	//Use the PageRenderer to generate the page itself
-	    	pageData = this.PageRenderer.render(page,session);
+	    	//Use the PageRenderer to generate the page itself, pass in the hats so pages can use that data to render those
+	    	pageData = this.PageRenderer.render(page,session,this.Hats.hats);
 	    }
 	    catch(err) {
 	    	renderingError = true;

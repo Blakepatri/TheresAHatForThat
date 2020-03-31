@@ -19,7 +19,8 @@ class PageRenderer {
 		}
 	}
 
-	render(page,session) {
+	//The function that actually creates the HTML for user requests.
+	render(page,session,hats) {
 		var nav = this.nav;
 		var footer = this.footer;
 
@@ -38,7 +39,7 @@ class PageRenderer {
 			</head>
 			<body>
 				${nav.render(session)}
-				${page.render(session)}
+				${page.render(session,hats)}
 				${footer.render(session)}
 			</body>
 			</html>

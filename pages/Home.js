@@ -3,25 +3,31 @@ Home page HTML elements
 
 constructor: 
 */
-function render() {
+function render(session,hats) {
 	return (`
 		<div class="home">
       <div class="row">
-          <div class="column">
-            <img src="..\images\hat1.jpg">
-            <h1>Hat Of The Day</h1>
-          </div>
-          <div class="column">
-            <img src="..\images\hat2.jpg">
-            <h1>Hat Of The Day</h1>           
-          </div>
-          <div class="column">
-            <img src="..\images\hat3.jpg">
-            <h1>Hat Of The Day</h1>           
-          </div>
+          ${renderHats(hats)}
       </div>
     </div>
 		`);
+}
+
+function renderHats(hats) {
+  var hatsHTML = "";
+
+  for(var hat in hats) {
+    if (hats[hat].frontPage) {
+      hatsHTML += `
+      <div class="column">
+        <img src="/images/${hats[hat].img}">
+        <h1>${hats[hat].name}</h1>
+        <h2>$${(hats[hat].price / 100).toFixed(2)}</h2>
+      </div>`;
+    }
+  }
+
+  return hatsHTML;
 }
 
 
