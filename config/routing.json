@@ -54,21 +54,21 @@
 			"title":"Add Hats",
 			"navbar":true,
 			"loggedIn":true,
-			"admin":0
+			"admin":1
 		},
 		"/addProm": {
 			"file":"addProm.js",
 			"title":"Add Prom",
 			"navbar":true,
 			"loggedIn":true,
-			"admin":0
+			"admin":1
 		},
 		"/admin": {
 			"file":"admin.js",
 			"title":"Admin",
 			"navbar":true,
 			"loggedIn":true,
-			"admin":0
+			"admin":1
 		},
 		"/cart": {
 			"file":"cart.js",
@@ -97,7 +97,7 @@
 			"navbar":true,
 			"loggedIn":true,
 			"admin":0
-		},
+		}
 	},
 	"api": {
 		"/user_login": {

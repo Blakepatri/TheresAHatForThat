@@ -2,10 +2,9 @@
 const Hat = require(__dirname + "/Hat.js");
 
 class Hats {
-	constructor(db) {
+	constructor() {
 		//An object containing all of the hats. Keys are the hat ID
 		this.hats = {};
-		loadHats(db);
 	}
 
 	//Load hats into memory for faster responses
@@ -13,16 +12,14 @@ class Hats {
 		console.log("initializing hats from database.");
 
 		db.getHats()
-		.then((results) => {hatsLoaded(results);})
-		.catch(err) {
+		.then((results) => {
+			console.log("hats loaded: ");
+			console.log(results);
+		})
+		.catch(function(err) {
 			console.log("Error loading the hats! We can't not have hats!");
 			throw err;
-		}
-	}
-
-	hatsLoaded(results) {
-		console.log("hats loaded: ");
-		console.log(results);
+		}); 
 	}
 
 	//Get hat information based on ID

@@ -1,21 +1,27 @@
 const fs = require('fs');
 const mysql = require('mysql');
 const database = require(__dirname + '/database.js');
-const DBConfig = __dirname + "/config/database.json";
 //Initialize the db object as global so it can be passed around through all of the promises.
 var db;
 
 class databaseHandler{
-      constructor() {
-        fs.readFile(DBConfig, 'utf8', (err,data) => {this.initDB(err,data)});
+      constructor(dbconfig) {
+        console.log("Initializing databaseHandler");
+        db = new database(dbconfig);
+        console.log("databaseHandler init finished");
       }
 
-      //Read the config data and pass it off to the database class
-      initDB(err,data) {
-        console.log("Initializing databaseHandler from config: " + DBConfig);
-        db = new database(data);
-        db.createConnPool();
-        console.log("databaseHandler init finished");
+      createConnPool() {
+        console.log("Creating database connection pool");
+        return new Promise(function(resolve,reject) {
+          db.createConnPool().then(function(results) {
+            console.log("DB Connection pool created successfully");
+            resolve(results)
+          })
+          .catch(function(err) {
+            console.log(err);
+          });
+        });
       }
 
       queryDatabase(query) {
@@ -104,8 +110,8 @@ class databaseHandler{
       //Delete a user account
       deleteUser(email, pass){
 
-        query = 'DELETE FROM Users WHERE email = ? AND password = ?';
-        variables = [email, pass];
+        var query = 'DELETE FROM Users WHERE email = ? AND password = ?';
+        var variables = [email, pass];
         query = mysql.format(query, variables);
 
         return this.queryDatabase(query);
@@ -115,8 +121,8 @@ class databaseHandler{
       //Change a users password
       changeUserPassword(userName, oldPass, newPass){
 
-        query = 'UPDATE Users SET password = ? WHERE email = ? AND password = ?';
-        variables = [newPass, userName, oldPass];
+        var query = 'UPDATE Users SET password = ? WHERE email = ? AND password = ?';
+        var variables = [newPass, userName, oldPass];
         query = mysql.format(query, variables);
 
         this.queryDatabase(query);
@@ -125,7 +131,7 @@ class databaseHandler{
 
       //Get all of the hats.
       getHats() {
-        query = 'SELECT * FROM products;';
+        var query = 'SELECT * FROM products;';
         return this.queryDatabase(query);
       }
 

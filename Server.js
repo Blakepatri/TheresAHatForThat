@@ -18,6 +18,7 @@ const PageRenderer = require(__dirname + "/PageRenderer.js");//Primary page rend
 const FileHandler = require(__dirname + "/FileHandler.js");//Gets read streams for files as well as other information such as the content type
 const SessionHandlerFile = require(__dirname + "/SessionHandler.js");
 const databaseHandler = require(__dirname + "/databaseHandler.js");
+const Hats = require(__dirname + "/Hats.js");
 
 //Configuration
 const pageDirectory = __dirname + "/pages/";//Directory of the individual page renderers
@@ -28,7 +29,7 @@ const navElem = "nav.js";
 const footerElem = "footer.js";
 
 class Server {
-	constructor(port, logging, routing, localOnly) {
+	constructor(port, logging, routing, databaseInfo) {
 		//The port the HTTP server listens on
 		if (!port) {
 			this.port = 80;
@@ -58,18 +59,18 @@ class Server {
 			}
 		}
 		*/
-		if (!routing || ((typeof routing !== "object") && (typeof routing !== "OBJECT") && (typeof routing !== "Object"))) {
-			throw "Error initializing HTTP server, invalid routing information passed. Routing info should be an OBJECT. Type is currently: " + typeof routing;
+		if (!routing || (((typeof routing) !== "object") && ((typeof routing) !== "OBJECT") && (typeof routing !== "Object"))) {
+			throw "Error initializing HTTP server, invalid routing information passed. Routing info should be an OBJECT. Type is currently: " + (typeof routing);
 		}
 		else {
 			this.routing = routing;
 		}
 
-		if (localOnly) {
-			this.localOnly = true;
+		if (!databaseInfo) {
+			throw "Database info not loaded properly";
 		}
 		else {
-			this.localOnly = false;
+			this.dbInfo = databaseInfo;
 		}
 
 		this.initPages();
@@ -96,12 +97,26 @@ class Server {
 	//Initializae the routing of the API
 	initAPI() {
 		this.log(0,"Beginning API init.");
+		//The class that handles serving files over HTTP
 		this.FileHandler = new FileHandler();
-		this.db = new databaseHandler();
+		//The class that handles sessions
 		this.SessionHandler = new SessionHandlerFile();
-		this.Hats = new Hats(db);
+		//The class that handles storing keeping track of hats
+		this.Hats = new Hats();
+		//The class that handles database queries
+		this.db = new databaseHandler(this.dbInfo);
+		//Create the connections, and once that's done load the hats
+		this.db.createConnPool()
+		.then(function(results) {
+			console.log("DB setup complete, beginning to load hats.");
+			this.Hats.loadHats(db);
+		}.bind(this))
+		.catch(function(err) {
+			console.log(err);
+			throw err;
+		}.bind(this));
 
-		//Essentially every API object has an API() function that gets called when a request is routed to it
+		//Essentially every API route has an API() function that gets called when a request is routed to it. The API() function is expected to handle
 		for (var api in this.routing.api) {
 			this.log(0,"API found: " + api);
 			var currentAPI = this.routing.api[api];
@@ -142,13 +157,6 @@ class Server {
 
 	//Handler for HTTP requests
 	HTTPRequest(request, response) {
-		//Ensure things are coming from the local machine
-		if (this.localOnly && request.headers.host !== "localhost" && request.headers.host !== "127.0.0.1") {
-			this.log(3,"Forbidden request from: " + request.headers.host);
-			this.HTTPError(request,response,403);
-			return;
-		}
-
 		var URLPath = url.parse(request.url).pathname;
 		this.log(3,URLPath);
 		var cookies = new Cookies(request,response);
