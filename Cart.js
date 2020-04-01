@@ -1,4 +1,7 @@
-/*A class for handling items stored in a cart*/
+/*A class for handling items stored in a cart
+Note that the server handles storing prices in terms of cents. Allows the prices to be stored as integers. 
+No need to mess with posibilities of rounding errors. 
+*/
 class Cart {
 	constructor() {
 		//An object containing hats and their quantity
