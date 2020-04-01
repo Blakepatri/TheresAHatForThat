@@ -1,7 +1,7 @@
 /**
 A function to handle logging users out
 */
-function API(req,res,cookies,session,SessionHandler) {
+function API(req,res,cookies,session,query,SessionHandler) {
 	console.log("LOGGING USER OUT");
 	SessionHandler.endSession(req,res,cookies);
 }

@@ -67,6 +67,22 @@ class SessionHandler {
 		}
 	}
 
+	//Update a session on the user's side after something changes like things in the cart
+	updateSession(cookies,session) {
+		if (!session || !cookies || !session.userId) {
+			return false;
+		}
+
+		session.last = Date.now();
+
+		try {
+			cookies.set("TAHFT",this.encryptSession(session.userId,session.username))
+		}
+		catch(err) {
+
+		}
+	}
+
 	//Encrypt the session
 	encryptSession(userId,username) {
 		var sessionObj = {

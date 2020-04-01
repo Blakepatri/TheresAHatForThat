@@ -1,5 +1,6 @@
 /**
 The session Object that is kept track of by SessionHandler
+SessionHandler.sessions object contains all currently active sessions
 */
 const path = require('path');
 const Cart = require(path.join(__dirname,"Cart.js"));
@@ -7,7 +8,7 @@ const Cart = require(path.join(__dirname,"Cart.js"));
 class Session {
 	constructor(userId,username,admin) {
 		if (!username || !userId) {
-			throw "Error, attempting to start a session without critical data";
+			throw "Error, attempting to start a session without critical data.";
 		}
 		else {
 			if (!admin) {

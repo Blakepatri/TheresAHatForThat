@@ -184,7 +184,7 @@ class Server {
 			var api = this.routing.api[URLPath];
 			this.log(4,"API information:",api);
 			//Call the API function from the API object, Cookies, session, SessionHandler, databaseHandler, and do not necessarily need to be handled by the API
-			api.API(request,response,cookies,session,this.SessionHandler,this.db);
+			api.API(request,response,cookies,session,query,this.SessionHandler,this.db);
 		}
 		//Check if it should try and serve a file or image
 		else if (URLPath.search(/^(\/images\/)/i) > -1) {
