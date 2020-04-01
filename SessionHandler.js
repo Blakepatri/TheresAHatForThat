@@ -55,8 +55,9 @@ class SessionHandler {
 		}
 		
 		if (newSession) {
-			//Encrypt the session to be sent back
-			cookies.set("TAHFT",this.encryptSession(newSession));
+			//Encrypt the session to be sent back, only the userId and username needs to be sent with the cookie.
+			//Everything else can be cached server side.
+			cookies.set("TAHFT",this.encryptSession(newSession.userId,newSession.username));
 			this.sessions[userId] = newSession;
 			return true;
 		}
@@ -66,8 +67,12 @@ class SessionHandler {
 	}
 
 	//Encrypt the session
-	encryptSession(session) {
-		var sessionJSON = JSON.stringify(session);
+	encryptSession(userId,username) {
+		var sessionObj = {
+			"userId":userId,
+			"username":username
+		};
+		var sessionJSON = JSON.stringify(sessionObj);
 		var cipher = crypto.createCipher('aes-256-cbc',this.SessionKey);
 		var sessionString = cipher.update(sessionJSON,'utf8','base64');
 		sessionString += cipher.final('base64');

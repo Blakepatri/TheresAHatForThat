@@ -1,6 +1,8 @@
 /**
 The session Object that is kept track of by SessionHandler
 */
+const path = require('path');
+const Cart = require(path.join(__dirname,Cart.js));
 
 class Session {
 	constructor(userId,username,admin) {
@@ -14,6 +16,7 @@ class Session {
 			this.userId = userId;
 			this.username = username;
 			this.admin = admin;
+			this.cart = new Cart();
 		}
 
 		//Set a timestamp for the last time the session was accessed

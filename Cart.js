@@ -1,6 +1,7 @@
 /*A class for handling items stored in a cart
 Note that the server handles storing prices in terms of cents. Allows the prices to be stored as integers. 
-No need to mess with posibilities of rounding errors. 
+No need to mess with posibilities of rounding errors.
+Carts are kept track of by sessions. 
 */
 class Cart {
 	constructor() {
@@ -15,6 +16,8 @@ class Cart {
 		this.hats = {};
 		//The total price of the items in the cart
 		this.totalPrice = 0;
+		//Total number of items in the cart
+		this.totalItems = 0;
 	}
 
 	//Add an item to the cart
@@ -30,6 +33,8 @@ class Cart {
 			this.hats[hat.id].hat = hat;
 			this.hats[hat.id].qty = 1;
 		}
+
+		this.totalItems += 1;
 	}
 
 	//Remove an item from the Cart
@@ -51,5 +56,9 @@ class Cart {
 				}
 			}
 		}
+
+		this.totalItems -= 1;
 	}
 }
+
+module.exports = Cart;
