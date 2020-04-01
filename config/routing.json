@@ -122,6 +122,10 @@
 		"/add_to_cart": {
 			"file":"AddToCart.js",
 			"admin":0
-		}	
+		},
+		"/remove_from_cart": {
+			"file":"RemoveFromCart.js",
+			"admin":0
+		}
 	}
 }

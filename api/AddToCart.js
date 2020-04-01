@@ -1,12 +1,8 @@
 /*A route for adding a hat to the cart.
 Cart objects are a part of Session objects*/
 function API(req,res,cookies,session,query,SessionHandler,db,Hats) {
-	console.log("ADD TO CART");
-	console.log(query);
-	console.log(query.id)
-	console.log(Hats[query.id]);
-
 	if (!session) {
+		//If there isn't a session the user probably isn't logged in, send them to login
 		redirectToLogin(req,res);
 	}
 	else if (query.id && Hats[query.id]) {
