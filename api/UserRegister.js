@@ -6,7 +6,7 @@ const emailRegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"
 /**
 A function to handle registering users
 */
-function API(req,res,cookies,SessionHandler,db) {
+function API(req,res,cookies,session,SessionHandler,db) {
 	console.log("New user registration");
 	var regError = false;
 

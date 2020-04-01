@@ -5,9 +5,7 @@ const emailRegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"
 /**
 A function to handle users logging in
 */
-function API(req,res,cookies,SessionHandler,db) {
-	console.log("SessionHandler: ");
-	console.log(SessionHandler);
+function API(req,res,cookies,session,SessionHandler,db) {
 	if (req.method === 'POST') {
 		var body = [];
 		req.on('data', (chunk) => {
