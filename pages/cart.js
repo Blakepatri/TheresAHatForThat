@@ -1,4 +1,4 @@
-function render() {
+function render(session,hats) {
 	return (
 		`<div class="cart">
       <h1 class="your-items">Your Items</h1>
