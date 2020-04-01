@@ -188,19 +188,15 @@ class Server {
 		}
 		//Check if it should try and serve a file or image
 		else if (URLPath.search(/^(\/images\/)/i) > -1) {
-			this.log(5,"image information:",URLPath);
 			this.FileResponse(request,response,URLPath,"images");
 		}
 		else if (URLPath.search(/^(\/scripts\/)/i) > -1) {
-			this.log(5,"script information:",URLPath);
 			this.FileResponse(request,response,URLPath,"scripts");
 		}
 		else if (URLPath.search(/^(\/css\/)/i) > -1) {
-			this.log(5,"script information:",URLPath);
 			this.FileResponse(request,response,URLPath,"css");
 		}
 		else if (URLPath.search(/^(\/files\/)/i) > -1) {
-			this.log(5,"script information:",URLPath);
 			this.FileResponse(request,response,URLPath,"files");
 		}
 		//No routing info, send 404

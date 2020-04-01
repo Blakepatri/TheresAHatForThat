@@ -55,6 +55,13 @@ class Cart {
 
 				}
 			}
+
+			//Not sure how the total price got under 0 but something went wrong. Reset the cart
+			if (this.totalPrice < 0) {
+				this.totalPrice = 0;
+				this.totalItems = 0;
+				this.hats = {}
+			} 
 		}
 
 		this.totalItems -= 1;

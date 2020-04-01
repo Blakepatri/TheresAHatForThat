@@ -119,7 +119,8 @@ class SessionHandler {
 			session = JSON.parse(decipheredString);
 		}
 		catch(err) {
-			console.log("There was an error decrypting a session cookie. It might have been tampered with.",err);
+			console.log("There was an error decrypting a session cookie. It might have been tampered with.",decipheredString);
+			console.log(err);
 			session = null;
 		}
 
