@@ -3,13 +3,12 @@ Main file for running everything, loads a few config files that need to be initi
 */
 console.log("There's a Hat For That Booting :>");
 //Modules and imports
-const Server = require("./Server.js");
 const fs = require("fs");
+const path = require('path');
+const Server = require(path.join(__dirname,"Server.js"));
 
-const directory = __dirname + "/"; //The directory of this file
-const configDirectory = directory + "config/";
-const routingConfig = configDirectory + "routing.json";
-const DBConfig = __dirname + "/config/database.json";
+const routingConfig = path.join(__dirname,"config","routing.json");
+const DBConfig = path.join(__dirname,"config","database.json");
 
 const serverPort = 80;//HTTP
 const loggingLvl = 4;//Log everything

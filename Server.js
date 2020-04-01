@@ -17,16 +17,16 @@ const Cookies = require('cookies');
 const qs = require('querystring');
 
 //Various handler classes
-const PageRenderer = require(__dirname + "/PageRenderer.js");//Primary page renderer, combines nav, pages, and the footer.
-const FileHandler = require(__dirname + "/FileHandler.js");//Gets read streams for files as well as other information such as the content type
-const SessionHandlerFile = require(__dirname + "/SessionHandler.js");//Handles starting,stopping, and checking sessions
-const databaseHandler = require(__dirname + "/databaseHandler.js");//Database queries
-const Hats = require(__dirname + "/Hats.js");//Hats.
+const PageRenderer = require(path.join(__dirname,"PageRenderer.js"));//Primary page renderer, combines nav, pages, and the footer.
+const FileHandler = require(path.join(__dirname,"FileHandler.js"));//Gets read streams for files as well as other information such as the content type
+const SessionHandlerFile = require(path.join(__dirname,"SessionHandler.js"));//Handles starting,stopping, and checking sessions
+const databaseHandler = require(path.join(__dirname,"databaseHandler.js"));//Database queries
+const Hats = require(path.join(__dirname,"Hats.js"));//Hats.
 
 //Configuration
-const pageDirectory = __dirname + "/pages/";//Directory of the individual page renderers
-const APIDirectory = __dirname + "/api/";//Directory of the API functions
-const configDirectory = __dirname + "/config/";
+const pageDirectory = path.join(__dirname,"pages");//Directory of the individual page renderers
+const APIDirectory = path.join(__dirname,"api");//Directory of the API functions
+const configDirectory = path.join(__dirname,"config");
 //Navigation element files
 const navElem = "nav.js";
 const footerElem = "footer.js";
@@ -91,7 +91,7 @@ class Server {
 		for(var page in this.routing.pages) {
 			this.log(0,"Page found: " + page);
 			var currentPage = this.routing.pages[page];
-			currentPage.render = require(pageDirectory + currentPage.file).render;
+			currentPage.render = require(path.join(pageDirectory,currentPage.file)).render;
 		}
 
 		this.log(0,"Finished page rendering init.");
@@ -123,7 +123,7 @@ class Server {
 		for (var api in this.routing.api) {
 			this.log(0,"API found: " + api);
 			var currentAPI = this.routing.api[api];
-			currentAPI.API = require(APIDirectory + currentAPI.file).API;
+			currentAPI.API = require(path.join(APIDirectory,currentAPI.file)).API;
 		}
 		this.log(0,"Finished calling API init. functions, some may still be doing stuff in the background.");
 	}
@@ -144,7 +144,7 @@ class Server {
 	initHTTPErrorCodes() {
 		//HTTP error codes and pages
 		this.errorCodes = {};
-		fs.readFile(configDirectory + "errorCodes.json", 'utf8', (err,data) => {
+		fs.readFile(path.join(configDirectory,"errorCodes.json"), 'utf8', (err,data) => {
 			this.setHTTPErrorCodes(err,data);
 		});
 	}
