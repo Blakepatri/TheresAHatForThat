@@ -220,3 +220,14 @@ span.psw {
     width: 100%;
   }
 }
+
+.cart {
+  text-align: center;
+  width:100%;
+}
+
+.cart .row {
+  display:inline-block;
+  border:solid 1px black;
+  text-align: center;
+}

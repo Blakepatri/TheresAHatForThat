@@ -22,7 +22,7 @@ function API(req,res,cookies,session,query,SessionHandler,db,Hats) {
 }
 
 function redirect(req,res,url) {
-	res.writeHead(301, { Location: url });
+	res.writeHead(307, { Location: url });
 	res.end();
 }
 
