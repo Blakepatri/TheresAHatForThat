@@ -2,12 +2,13 @@
 function API(req,res,cookies,session,query,SessionHandler,db,Hats) {
 	if (!session) {
 		//If there isn't a session the user probably isn't logged in, send them to login
-		redirectToLogin(req,res);
+		redirect(req,res,'/login');
 	}
 	else if (query.id && Hats[query.id]) {
 		console.log(session.cart);
 		try {
 			session.cart.removeItem(Hats[query.id]);
+			redirect(req,res,'/cart');
 		}
 		catch(err) {
 			console.log(err);
@@ -20,8 +21,8 @@ function API(req,res,cookies,session,query,SessionHandler,db,Hats) {
 	}
 }
 
-function redirectToLogin(req,res) {
-	res.writeHead(301, { Location: '/login' });
+function redirect(req,res,url) {
+	res.writeHead(301, { Location: url });
 	res.end();
 }
 

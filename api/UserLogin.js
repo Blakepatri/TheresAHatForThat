@@ -45,7 +45,7 @@ function API(req,res,cookies,session,query,SessionHandler,db) {
 
 						if (!sessionError) {
 							console.log("User login: " + postData['uname']);
-			    			res.writeHead(301, { Location: '/home' });
+			    			res.writeHead(307, { Location: '/home' });
 			    			res.end();
 						}
 						else {

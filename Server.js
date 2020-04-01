@@ -170,17 +170,19 @@ class Server {
 			query = null;
 		}
 		this.log(3,URLPath);
-		var cookies = new Cookies(request,response);
-		var session = this.SessionHandler.getSession(request,response,cookies);
 
 		//Check if the request should actually be routed to a page
 		if (this.routing.pages[URLPath]) {
+			var cookies = new Cookies(request,response);
+			var session = this.SessionHandler.getSession(request,response,cookies);
 			var page = this.routing.pages[URLPath];
 			this.log(5,"Page information:",page);
 			this.HTMLResponse(request,response,page,session,query);
 		}
 		//Check if it should be routed to the API
 		else if (this.routing.api[URLPath]) {
+			var cookies = new Cookies(request,response);
+			var session = this.SessionHandler.getSession(request,response,cookies);
 			var api = this.routing.api[URLPath];
 			this.log(4,"API information:",api);
 			//Call the API function from the API object, Cookies, session, SessionHandler, databaseHandler, and hats do not necessarily need to be handled by the API

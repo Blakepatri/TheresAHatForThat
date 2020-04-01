@@ -11,7 +11,7 @@ function render(session) {
       <a href="/account">Account</a>
       <a href="/orders">Orders</a>
           <a href="/cart">Cart</a>
-      <a href="/logout">Log Out</a>
+      <a href="/user_logout">Log Out</a>
     </div>
 </div>
 `);

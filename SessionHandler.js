@@ -142,19 +142,19 @@ class SessionHandler {
 		return session;
 	}
 
-	//Called from UserLogout.js
-	endSession(req,res,cookies) {
-		var session = getSession(req,res);
-
+	//Called from UserLogout.js, clears the cookie, deletes session object
+	endSession(req,res,cookies,session) {
 		if (session) {
-			cookies.set("THAFT","");
-			this.sessions[session.id] = null;
+
+			//Delete the session object
+			delete this.sessions[session.id];
+			session = undefined;
+
 			//CLEAR FROM DATABASE IF STORED
-			return true;
 		}
-		else {
-			return false;
-		}
+
+		//Clear the cookie
+		cookies.set("TAHFT"," ");
 	}
 
 	//Check the integrity of the session to see if it matches what we have stored
