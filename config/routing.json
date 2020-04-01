@@ -118,6 +118,10 @@
 		"/register_user": {
 			"file":"UserRegister.js",
 			"admin":0
+		},
+		"/add_to_cart": {
+			"file":"AddToCart.js",
+			"admin":0
 		}	
 	}
 }

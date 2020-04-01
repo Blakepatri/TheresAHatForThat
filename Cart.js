@@ -30,6 +30,7 @@ class Cart {
 			this.totalPrice += hat.price;
 		}
 		else {
+			this.hats[hat.id] = {};
 			this.hats[hat.id].hat = hat;
 			this.hats[hat.id].qty = 1;
 		}
