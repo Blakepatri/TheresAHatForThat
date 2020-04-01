@@ -3,10 +3,11 @@ A class for handling session information
 */
 const crypto = require('crypto');
 const fs = require('fs');
-const Session = require(__dirname + '/Session.js');
+const path = require('path');
+const Session = require(path.join(__dirname,'Session.js'));
 
 const algorithm = 'aes-256-cbc';
-const encryptionConfig = __dirname + "/config/encryption.json";
+const encryptionConfig = path.join(__dirname,"config","encryption.json");
 
 class SessionHandler {
 	constructor() {

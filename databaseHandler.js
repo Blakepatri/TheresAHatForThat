@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const mysql = require('mysql');
 const database = require(path.join(__dirname,'database.js'));
 //Initialize the db object as global so it can be passed around through all of the promises.

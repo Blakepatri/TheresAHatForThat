@@ -2,7 +2,7 @@
 The session Object that is kept track of by SessionHandler
 */
 const path = require('path');
-const Cart = require(path.join(__dirname,Cart.js));
+const Cart = require(path.join(__dirname,"Cart.js"));
 
 class Session {
 	constructor(userId,username,admin) {

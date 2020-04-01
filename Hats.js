@@ -1,4 +1,5 @@
 /*A class for managing all of the hats*/
+const path = require('path');
 const Hat = require(path.join(__dirname,"Hat.js"));
 
 class Hats {
