@@ -176,8 +176,15 @@ class Server {
 			var cookies = new Cookies(request,response);
 			var session = this.SessionHandler.getSession(request,response,cookies);
 			var page = this.routing.pages[URLPath];
-			this.log(5,"Page information:",page);
-			this.HTMLResponse(request,response,page,session,query);
+			this.log(4,"Page information:",page);
+			if (page.loggedIn && !session) {
+				//If the page requires a user to be logged in send them to /login
+				this.HTMLResponse(request,response,this.routing.pages["/login"],session,query);
+			}
+			else {
+				//otherwise send them to the page
+				this.HTMLResponse(request,response,page,session,query);
+			}
 		}
 		//Check if it should be routed to the API
 		else if (this.routing.api[URLPath]) {
