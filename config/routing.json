@@ -28,13 +28,6 @@
 			"loggedIn":false,
 			"admin":0
 		},
-		"/logout": {
-			"file":"Logout.js",
-			"title":"Logout",
-			"navbar":true,
-			"loggedIn":true,
-			"admin":0
-		},
 		"/register": {
 			"file":"Registration.js",
 			"title":"Register",
