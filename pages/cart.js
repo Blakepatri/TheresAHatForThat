@@ -12,9 +12,11 @@ function render(session,hats) {
 function renderCartItems(cart) {
   var items = cart.hats
   var cartHTML = '';
+  var totalPrice = 0;
 
   for(item in items) {
     console.log(items[item]);
+    totalPrice += (items[item].qty * items[item].hat.price);
     cartHTML += `
     <div class="row">
       <h1 class="h1-cart">${items[item].hat.name}</h1>
@@ -24,6 +26,8 @@ function renderCartItems(cart) {
     </div>
     `;
   }
+
+  cartHTML += `<div class="cart-total">Total: ${(totalPrice / 100).toFixed(2)}</div>`
 
   return cartHTML;
 }

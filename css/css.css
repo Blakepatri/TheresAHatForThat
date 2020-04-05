@@ -230,6 +230,9 @@ span.psw {
   display:inline-block;
   border:solid 1px black;
   text-align: center;
+  height:315px;
+  margin-bottom:10px;
+  vertical-align: top;
 }
 
 .cart .h1-cart {
@@ -238,4 +241,8 @@ span.psw {
   margin-top:0px;
   margin-bottom:10px;
   padding:10px;
+}
+
+.cart .cart-total {
+  font-size: 40px;
 }

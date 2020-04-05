@@ -14,10 +14,6 @@ class Cart {
 			}
 		*/
 		this.hats = {};
-		//The total price of the items in the cart
-		this.totalPrice = 0;
-		//Total number of items in the cart
-		this.totalItems = 0;
 	}
 
 	//Add an item to the cart
@@ -27,7 +23,6 @@ class Cart {
 		}
 		else if (this.hats[hat.id]) {
 			this.hats[hat.id].qty += 1;
-			this.totalPrice += hat.price;
 		}
 		else {
 			this.hats[hat.id] = {};
@@ -35,7 +30,6 @@ class Cart {
 			this.hats[hat.id].qty = 1;
 		}
 
-		this.totalItems += 1;
 	}
 
 	//Remove an item from the Cart
@@ -45,7 +39,6 @@ class Cart {
 		}
 		else {
 			this.hats[hat.id].qty -= 1;
-			this.totalPrice -= hat.price;
 
 			//It has been removed completely from the cart
 			if (this.hats[hat.id].qty <= 0) {
@@ -56,16 +49,7 @@ class Cart {
 
 				}
 			}
-
-			//Not sure how the total price got under 0 but something went wrong. Reset the cart
-			if (this.totalPrice < 0) {
-				this.totalPrice = 0;
-				this.totalItems = 0;
-				this.hats = {}
-			} 
 		}
-
-		this.totalItems -= 1;
 	}
 }
 
