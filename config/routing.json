@@ -126,6 +126,10 @@
 		"/remove_from_cart": {
 			"file":"RemoveFromCart.js",
 			"admin":0
+		},
+		"/user_checkout": {
+			"file":"UserCheckout.js",
+			"admin":0
 		}
 	}
 }

@@ -40,9 +40,11 @@ class Cart {
 		else {
 			this.hats[hat.id].qty -= 1;
 
-			//It has been removed completely from the cart
+			//It has been removed completely from the cart, remove references
 			if (this.hats[hat.id].qty <= 0) {
 				try {
+					delete this.hats[hat.id].hat;
+					delete this.hats[hat.id].qty;
 					delete this.hats[hat.id];
 				}
 				catch(err) {
