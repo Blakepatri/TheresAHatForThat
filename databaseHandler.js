@@ -5,6 +5,8 @@ const database = require(path.join(__dirname,'database.js'));
 //Initialize the db object as global so it can be passed around through all of the promises.
 var db;
 
+//A class for handling Database queries. Returns promises when a query is made.
+//Note that the mysql module does automatic escaping inside the format() function. This is it's way of doing some variable binding.
 class databaseHandler{
       constructor(dbconfig) {
         console.log("Initializing databaseHandler");
@@ -82,30 +84,10 @@ class databaseHandler{
 
       //Add a new user
       addUser(email, pass, salt, firstName, lastName){
-        var query = `INSERT INTO Users (email, password, salt, FirstName, LastName) VALUES (?, ?, ?, ?, ?)`;
+        var query = 'INSERT INTO Users (email, password, salt, FirstName, LastName) VALUES (?, ?, ?, ?, ?)';
         var variables = [email, pass, salt, firstName, lastName];
         query = mysql.format(query, variables);
         return this.queryDatabase(query);
-      }
-
-      //Creates a new admin entry
-      addAdmin(){
-
-      }
-
-      //Deletes specified admin entry
-      deleteAdmin(){
-
-      }
-
-      //Verifies that a user is present in the admin table
-      checkAdmin(){
-
-      }
-
-      //Checks an admins permission level
-      checkPermissions(){
-
       }
 
       //Delete a user account
@@ -167,30 +149,23 @@ class databaseHandler{
 
       }
 
-      //Adds a new product variant
-      addNewVariant(){
+      //Create a new order and send back the last inserted ID
+      createOrder(orderTime,isShipped,trackingNumber,userId,orderTotal) {
+        var query = 'INSERT INTO ORDERS (timeCreated, isShipped, trackingNumber, userId, total) VALUES (?, ?, ?, ?, ?)';
+        var variables = [orderTime,isShipped,trackingNumber,userId,orderTotal];
+        query = mysql.format(query, variables);
 
-      };
-
-      //Deletes a product variant
-      delteVariant(){
-
-      };
-
-      //Adds a new product image
-      addImage(){
-
+        return this.queryDatabase(query);
       }
 
-      //Deletes specified product image
-      deleteImage(){
+      orderHasItem(order,item,qty) {
+        var query = 'INSERT INTO orderHasItem (`order`, item, qty) VALUES (?, ?, ?)';
+        var variables = [order,item,qty];
+        query = mysql.format(query, variables);
 
+        return this.queryDatabase(query);
       }
 
-      //Allows for the image to be chnaged or updated
-      changeImage(){
-
-      }
 
       //Adds a new promotion
       addPromotion(){
@@ -201,45 +176,6 @@ class databaseHandler{
       deletePromotion(){
 
       }
-
-      //Retrieves a specific invoice from the database
-      getInvoice(id){
-
-        query = 'SELECT * FROM Orders WHERE invoiceNum = ?';
-        query = mysql.format(query, id);
-
-        return this.queryDatabase(query);
-
-      }
-
-      //Creates a new invoice entry
-      addInvoice(){
-
-        query = '';
-
-        return this.queryDatabase(query);
-
-      }
-
-      //Updates the Orders table to indicate order is shipped
-      markOrderShipped(id){
-
-        query = 'UPDATE Orders SET isShipped = 1 WHERE invoiceNum = ?';
-        query = mysql.format(query, id);
-
-        this.queryDatabase(query);
-
-      }
-
-      addTrackingNUmber(id, num){
-
-        query = 'UPDATE Orders SET trackingNumber = ? WHERE invoiceNum = ?';
-        variables = [id,num];
-        query = mysql.format(query, variables);
-
-        this.queryDatabase(query);
-      }
-
 }
 
 module.exports = databaseHandler;

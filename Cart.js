@@ -32,7 +32,7 @@ class Cart {
 
 	}
 
-	//Remove an item from the Cart
+	//Remove a single hat from the Cart
 	removeItem(hat) {
 		if (!hat || !this.hats[hat.id]) {
 			return false;
@@ -52,6 +52,38 @@ class Cart {
 				}
 			}
 		}
+	}
+
+	//Remove every one of a single hat from the cart
+	removeAllOfItem(id) {
+		if (!id || !this.hats[id]) {
+			return false;
+		}
+		else {
+			try {
+				delete this.hats[id].hat;
+				delete this.hats[id].qty;
+				delete this.hats[id];
+			}
+			catch(err) {
+
+			}
+		}
+	}
+
+	//Get total price of cart in cents
+	getTotal() {
+		var total = 0;
+		try {
+			for(var key in this.hats) {
+				total += (this.hats[key].qty * this.hats[key].hat.price);
+			}
+		}
+		catch(err) {
+			console.log(err);
+		}
+
+		return total
 	}
 }
 

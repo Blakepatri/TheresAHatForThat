@@ -230,7 +230,6 @@ span.psw {
   display:inline-block;
   border:solid 1px black;
   text-align: center;
-  height:315px;
   margin-bottom:10px;
   vertical-align: top;
 }
@@ -243,6 +242,11 @@ span.psw {
   padding:10px;
 }
 
+.cart-button {
+  width:300px;
+  display:inline-block;
+}
+
 .cart .cart-total {
   font-size: 40px;
 }
@@ -252,6 +256,10 @@ span.psw {
   margin:10px auto 30px auto;
   width:500px;
   text-align: center;
+}
+
+.checkout .total-price {
+  font-size: 58px;
 }
 
 .checkout input {

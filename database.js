@@ -25,7 +25,7 @@ class database {
         this.host = data.host;
         this.password = data.password;
         this.port = data.port;
-        this.database = data.database
+        this.database = data.database;
       }
     }
   }
@@ -35,7 +35,7 @@ class database {
     return new Promise(function(resolve,reject) {
       //Create a connection pool
       this.pool = mysql.createPool({
-        connectionLimit:10,
+        connectionLimit:50,
         host: this.host,
         user: this.user,
         password: this.password,

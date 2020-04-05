@@ -104,6 +104,13 @@
 			"navbar":false,
 			"loggedIn":true,
 			"admin":0
+		},
+		"/checkout_complete": {
+			"file":"Checkout_complete.js",
+			"title":"Checkout",
+			"navbar":false,
+			"loggedIn":true,
+			"admin":0
 		}
 	},
 	"api": {

@@ -30,21 +30,21 @@ ENGINE = InnoDB;
 -- Table `TAHFT_DB`.`Orders`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `TAHFT_DB`.`Orders` (
-  `invoiceNum` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `timeCreated` TIMESTAMP NOT NULL,
   `isShipped` TINYINT NOT NULL,
   `trackingNumber` INT NULL,
-  `Users_userId` INT NOT NULL,
-  PRIMARY KEY (`invoiceNum`),
-  UNIQUE INDEX `invoiceNum_UNIQUE` (`invoiceNum` ASC),
-  INDEX `fk_Orders_Users_idx` (`Users_userId` ASC),
+  `userId` INT NOT NULL,
+  `total` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+  INDEX `fk_Orders_Users_idx` (`userId` ASC),
   CONSTRAINT `fk_Orders_Users`
-    FOREIGN KEY (`Users_userId`)
+    FOREIGN KEY (`userId`)
     REFERENCES `TAHFT_DB`.`Users` (`userId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `TAHFT_DB`.`Products`
@@ -61,6 +61,25 @@ CREATE TABLE IF NOT EXISTS `TAHFT_DB`.`Products` (
   UNIQUE INDEX `productID_UNIQUE` (`productID` ASC))
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `TAHFT_DB`.`OrderHasProduct`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `TAHFT_DB`.`OrderHasItem` (
+  `order` INT NOT NULL,
+  `item` INT NOT NULL,
+  `qty` INT NOT NULL,
+  CONSTRAINT `fk_OrderHasItem_Order`
+    FOREIGN KEY (`order`)
+    REFERENCES `TAHFT_DB`.`Orders` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_OrderHasItem_Item`
+    FOREIGN KEY (`item`)
+    REFERENCES `TAHFT_DB`.`Products` (`productID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+)
+ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `TAHFT_DB`.`Promotions`
