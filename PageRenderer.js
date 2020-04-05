@@ -1,21 +1,21 @@
+const path = require('path');
 /**
-A class for rendering pages
+A class for rendering pages, calls an individual page's render() function in order to generate the content of the body
 */
-
 class PageRenderer {
 	constructor(nav,footer,pages) {
 		if (!nav) {
-			this.nav = require(__dirname + "/elements/nav.js");
+			this.nav = require(path.join(__dirname,"elements","nav.js"));
 		}
 		else {
-			this.nav = require(__dirname + "/elements/" + nav);
+			this.nav = require(path.join(__dirname,"elements",nav));
 		}
 
 		if (!footer) {
-			this.footer = require(__dirname + "/elements/footer.js");
+			this.footer = require(path.join(__dirname,"elements","footer.js"));
 		}
 		else {
-			this.footer = require(__dirname + "/elements/" + footer);
+			this.footer = require(path.join(__dirname,"elements",footer));
 		}
 	}
 

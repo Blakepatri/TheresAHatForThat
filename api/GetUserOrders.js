@@ -1,6 +1,6 @@
 /**
 A function to get and format a user's orders for display
-This should have been done through AJAX, wouldnt have needed iframe shenanigans
+This should have been done through AJAX, wouldnt have needed iframe shenanigans or to render an HTML element
 */
 function API(req,res,cookies,session,query,SessionHandler,db) {
 	if (!session || !session.userId) {
