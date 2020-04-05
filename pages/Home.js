@@ -30,5 +30,4 @@ function renderHats(hats) {
   return hatsHTML;
 }
 
-
 module.exports.render = render;

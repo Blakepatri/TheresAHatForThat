@@ -91,17 +91,17 @@
 			"loggedIn":false,
 			"admin":0
 		},
-		"/item": {
-			"file":"item.js",
-			"title":"item",
-			"navbar":true,
-			"loggedIn":false,
-			"admin":0
-		},
 		"/orders": {
 			"file":"account.js",
-			"title":"Add Prom",
+			"title":"Your Orders",
 			"navbar":true,
+			"loggedIn":true,
+			"admin":0
+		},
+		"/checkout": {
+			"file":"Checkout.js",
+			"title":"Checkout",
+			"navbar":false,
 			"loggedIn":true,
 			"admin":0
 		}

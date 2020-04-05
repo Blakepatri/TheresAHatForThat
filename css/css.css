@@ -166,7 +166,7 @@ form {
 }
 
 /* Full-width inputs */
-input[type=text], input[type=password], input[type=email] {
+input[type=text], input[type=password], input[type=email], input[type=number] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -245,4 +245,19 @@ span.psw {
 
 .cart .cart-total {
   font-size: 40px;
+}
+
+.checkout {
+  display:block;
+  margin:10px auto 30px auto;
+  width:500px;
+  text-align: center;
+}
+
+.checkout input {
+  display:block;
+}
+
+.checkout input.checkout-csv {
+  width:100px;
 }

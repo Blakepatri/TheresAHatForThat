@@ -29,6 +29,10 @@ function renderCartItems(cart) {
 
   cartHTML += `<div class="cart-total">Total: ${(totalPrice / 100).toFixed(2)}</div>`
 
+  if (totalPrice > 0) {
+    cartHTML += `<a class="cart-button" href="/checkout">Checkout</a>`;
+  }
+
   return cartHTML;
 }
 
