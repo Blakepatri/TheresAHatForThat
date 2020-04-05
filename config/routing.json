@@ -39,7 +39,7 @@
 			"file":"Registration.js",
 			"title":"Register",
 			"navbar":true,
-			"loggedIn":true,
+			"loggedIn":false,
 			"admin":0
 		},
 		"/account": {
@@ -92,7 +92,7 @@
 			"admin":0
 		},
 		"/orders": {
-			"file":"account.js",
+			"file":"orders.js",
 			"title":"Your Orders",
 			"navbar":true,
 			"loggedIn":true,
@@ -136,6 +136,10 @@
 		},
 		"/user_checkout": {
 			"file":"UserCheckout.js",
+			"admin":0
+		},
+		"/get_orders": {
+			"file":"GetUserOrders.js",
 			"admin":0
 		}
 	}

@@ -166,6 +166,14 @@ class databaseHandler{
         return this.queryDatabase(query);
       }
 
+      getUserOrders(userId) {
+        var query = 'SELECT TAHFT_DB.orders.timeCreated,TAHFT_DB.orders.trackingNumber,TAHFT_DB.orders.total, TAHFT_DB.orderHasItem.qty, TAHFT_DB.products.productID, TAHFT_DB.products.productName FROM TAHFT_DB.orders LEFT JOIN TAHFT_DB.orderHasItem ON orders.id=orderHasItem.`order` LEFT JOIN TAHFT_DB.products ON orderHasItem.item=products.productID WHERE TAHFT_DB.orders.userId=?';
+        var variables = [userId];
+        query = mysql.format(query, variables);
+
+        return this.queryDatabase(query);
+      }
+
 
       //Adds a new promotion
       addPromotion(){

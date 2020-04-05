@@ -25,18 +25,13 @@ class FileHandler {
 	constructor() {
 
 	}
-
-	getBasicFileInfo(fileName,folder) {
-
-	}
-
 	//Return an file in the form of a object:
 	/*{
 		"readStream":STREAM OBJECT,
 		"contentType":"image/jpeg",
 		"size":INT
 	}
-	Returns null if there is an error getting the image*/
+	Returns null if there is an error getting the file*/
 	getFile(fileName,folder) {
 		var file = null;
 		try {
@@ -62,21 +57,6 @@ class FileHandler {
 
 		return file;
 	}
-
-	getImageDimensions(fileName) {
-		var dim = {
-			"width":0,
-			"height":0
-		};
-
-		if (fs.existsSync(this.fileLocation + fileName)) {
-
-		}
-
-		return dim;
-	}
-
-
 }
 
 module.exports = FileHandler;

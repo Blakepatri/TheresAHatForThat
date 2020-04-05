@@ -269,3 +269,15 @@ span.psw {
 .checkout input.checkout-csv {
   width:100px;
 }
+
+iframe.orders-frame {
+  width:600px;
+  min-height:600px;
+  margin-left:auto;
+  margin-right:auto;
+  display:block;
+}
+
+.order-header-top {
+  margin-top:20px;
+}
