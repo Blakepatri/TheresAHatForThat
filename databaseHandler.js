@@ -87,6 +87,16 @@ class databaseHandler{
         var query = 'INSERT INTO Users (email, password, salt, FirstName, LastName) VALUES (?, ?, ?, ?, ?)';
         var variables = [email, pass, salt, firstName, lastName];
         query = mysql.format(query, variables);
+
+        return this.queryDatabase(query);
+      }
+
+      //Update a user's password and/or email
+      updateUser(email, pass, salt, userId) {
+        var query ='UPDATE Users SET email = ?, password= ? , salt= ? WHERE Users.userId= ?'
+        var variables = [email, pass, salt, userId];
+        query = mysql.format(query, variables);
+
         return this.queryDatabase(query);
       }
 

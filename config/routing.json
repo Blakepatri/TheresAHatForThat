@@ -109,30 +109,42 @@
 	"api": {
 		"/user_login": {
 			"file":"UserLogin.js",
+			"loggedIn":false,
 			"admin":0
 		},
 		"/user_logout": {
 			"file":"UserLogout.js",
+			"loggedIn":true,
 			"admin":0
 		},
 		"/register_user": {
 			"file":"UserRegister.js",
+			"loggedIn":false,
 			"admin":0
 		},
 		"/add_to_cart": {
 			"file":"AddToCart.js",
+			"loggedIn":true,
 			"admin":0
 		},
 		"/remove_from_cart": {
 			"file":"RemoveFromCart.js",
+			"loggedIn":true,
 			"admin":0
 		},
 		"/user_checkout": {
 			"file":"UserCheckout.js",
+			"loggedIn":true,
 			"admin":0
 		},
 		"/get_orders": {
 			"file":"GetUserOrders.js",
+			"loggedIn":true,
+			"admin":0
+		},
+		"/update_account": {
+			"file":"UpdateAccount.js",
+			"loggedIn":true,
 			"admin":0
 		}
 	}
