@@ -1,6 +1,7 @@
 /**
 The session Object that is kept track of by SessionHandler
 SessionHandler.sessions object contains all currently active sessions
+Also keeps track of the cart object
 */
 const path = require('path');
 const Cart = require(path.join(__dirname,"Cart.js"));
