@@ -189,21 +189,28 @@ class Server {
 		//Check if it should be routed to the API
 		else if (this.routing.api[URLPath]) {
 			var api = this.routing.api[URLPath];
+			var cookies = new Cookies(request,response);
+			var session = this.SessionHandler.getSession(request,response,cookies);
 			if (api.loggedIn && !session) {
 				//Check if the user needs to be logged in to access this route, if they do send them off to login
 				this.HTMLResponse(request,response,this.routing.pages["/login"],session,query);
 			}
-			else if (!session || api.admin > session.admin) {
+			else if ((!session && api.admin) || (session && api.admin > session.admin)) {
 				//User not permitted to see this page, send out a 404
 				this.HTTPError(request,response,404);
 			}
 			else {
 				//Route the API request
-				var cookies = new Cookies(request,response);
-				var session = this.SessionHandler.getSession(request,response,cookies);
 				this.log(4,"API information:",api);
 				//Call the API function from the API object, Cookies, session, SessionHandler, databaseHandler, and hats do not necessarily need to be handled by the API
-				api.API(request,response,cookies,session,query,this.SessionHandler,this.db,this.Hats.hats);
+				try {
+					api.API(request,response,cookies,session,query,this.SessionHandler,this.db,this.Hats.hats);
+				}
+				catch(err) {
+					console.log(err);
+					this.HTTPError(request,response,500);
+				}
+				
 			}
 		}
 		//Check if it should try and serve a file or image
@@ -279,11 +286,16 @@ class Server {
 
 	//Send back an HTTP error message, code is the HTTP response code
 	HTTPError(request,response,code) {
-		//Set the headers including the code.
-		response.writeHead(code, {'Content-Type': 'text/html'});
-		//Write a message to go with the error, contained in config/errorCodes.json
-		response.write(this.errorCodes[code]);
-		response.end();
+		try {
+			//Set the headers including the code.
+			response.writeHead(code, {'Content-Type': 'text/html'});
+			//Write a message to go with the error, contained in config/errorCodes.json
+			response.write(this.errorCodes[code]);
+			response.end();
+		}
+		catch(err) {
+			console.log(err);
+		}
 	}
 
 	//Log messages, first arguement should be the logging level, the rest are things to be logged.
