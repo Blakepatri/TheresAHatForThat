@@ -45,9 +45,9 @@ class Hats {
 		return this.hats[id];
 	}
 
-	//Add a new hat to the database
-	addHat() {
-
+	//Add a new hat to the loaded hats
+	addHat(id,name,desc,img,price,frontPage,active) {
+		this.hats[id] = new Hat(id,name,desc,img,price,frontPage,active);
 	}
 
 	//Hats shouldn't be permanently removed as their ID codes are tied to things, instead flag it as no longer available

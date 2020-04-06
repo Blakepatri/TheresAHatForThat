@@ -186,7 +186,7 @@ class Server {
 				this.HTTPError(request,response,404);
 			}
 			else {
-				//otherwise send them to the page
+				//otherwise send them to the page, pass along the session and query
 				this.HTMLResponse(request,response,page,session,query);
 			}
 		}
@@ -206,7 +206,9 @@ class Server {
 			else {
 				//Route the API request
 				this.log(4,"API information:",api);
-				//Call the API function from the API object, Cookies, session, SessionHandler, databaseHandler, and hats do not necessarily need to be handled by the API
+				//Call the API function from the API object.
+				//Cookies, session, SessionHandler, databaseHandler, and hats do not necessarily need to be handled by the API
+				//Responses should be handled within the API itself. Especially since many API operations are asynchronous
 				try {
 					api.API(request,response,cookies,session,query,this.SessionHandler,this.db,this.Hats.hats);
 				}
@@ -241,7 +243,7 @@ class Server {
 		var renderingError = false;
 		var pageData = "";
 	    try {
-	    	//Use the PageRenderer to generate the page itself, pass in the hats so pages can use that data to render those, as well as a query object
+	    	//Use the PageRenderer to generate the page itself, pass in the hats array so pages can use that data to render those, as well as a query object
 	    	pageData = this.PageRenderer.render(page,session,this.Hats.hats,query);
 	    }
 	    catch(err) {
@@ -266,6 +268,7 @@ class Server {
 	//Send a file back, the handler will guess the content type
 	FileResponse(request,response,URLPath,fileFolder) {
 		var fileName = path.basename(URLPath);
+		//Get the readstream from the FileHandler
 		var file = this.FileHandler.getFile(fileName,fileFolder);
 		this.log(5,"File response: ",file);
 		if (file && file.readStream) {
@@ -276,6 +279,7 @@ class Server {
 		    });
 
 			try {
+				//Pipe the stream to the user
 				file.readStream.pipe(response);
 			}
 			catch(err) {

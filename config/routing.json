@@ -42,8 +42,8 @@
 			"loggedIn":true,
 			"admin":0
 		},
-		"/addHats": {
-			"file":"addHats.js",
+		"/addhat": {
+			"file":"addHat.js",
 			"title":"Add Hats",
 			"navbar":false,
 			"loggedIn":true,
