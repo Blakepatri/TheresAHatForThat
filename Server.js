@@ -181,6 +181,10 @@ class Server {
 				//If the page requires a user to be logged in send them to /login
 				this.HTMLResponse(request,response,this.routing.pages["/login"],session,query);
 			}
+			else if ((!session && page.admin) || (session && page.admin > session.admin)) {
+				//User not permitted to see this page, send out a 404 to make them think it doesnt exist
+				this.HTTPError(request,response,404);
+			}
 			else {
 				//otherwise send them to the page
 				this.HTMLResponse(request,response,page,session,query);
@@ -196,7 +200,7 @@ class Server {
 				this.HTMLResponse(request,response,this.routing.pages["/login"],session,query);
 			}
 			else if ((!session && api.admin) || (session && api.admin > session.admin)) {
-				//User not permitted to see this page, send out a 404
+				//User not permitted to use this API, send out a 404
 				this.HTTPError(request,response,404);
 			}
 			else {
