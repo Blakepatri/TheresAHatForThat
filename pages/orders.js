@@ -2,7 +2,7 @@
 function render() {
 	return (
 		`<div class="orders">
-      <h1 class="your-items">Your Items</h1>
+      <h1 class="your-items">Your Orders</h1>
     </div>
     <iframe class="orders-frame" src="/get_orders">`
 	);
