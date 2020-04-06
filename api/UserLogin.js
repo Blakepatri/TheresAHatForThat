@@ -23,8 +23,6 @@ function API(req,res,cookies,session,query,SessionHandler,db) {
 		  		var salt = "TAHFT_Sombrero";
 	    		var password = postData["psw"] + salt;
 	    		var hashedPass = crypto.createHash('sha256').update(password).digest('hex');
-	    		console.log("email: " + postData['uname']);
-	    		console.log("hash: " + hashedPass);
 	    		db.getUserForLogin(postData['uname'], hashedPass)
 		    	.then(function(results) {
 		    		if (results && results.length > 0) {

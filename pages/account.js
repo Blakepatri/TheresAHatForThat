@@ -1,29 +1,25 @@
 /**
-Home page HTML elements
-
+User account page
+Should probably have first name and last name but I did not get a chance to implement those
 constructor: 
 */
-function render() {
+function render(session) {
 	return (
 		`<div class="account">
-            <form>
-                <label for="name"><b>Name</b></label>
-                <input type="text" placeholder="Enter name" name="name">
-
+            <form action="/update_account" method="POST">
                 <label for="email"><b>Email</b></label>
-                <input type="email" placeholder="Enter Email" name="email">
+                <input type="email" placeholder="Enter Email" name="email" value="${session.username}">
 
                 <label for="psw"><b>Password</b></label>
-                <input type="password" placeholder="Enter Password" name="pasw">
+                <input type="password" placeholder="Enter Password" name="pass" value="">
 
                 <label for="psw"><b>Confrim Password</b></label>
-                <input type="password" placeholder="Confrim Password" name="psw">
+                <input type="password" placeholder="Confrim Password" name="passConfirm" value="">
 
-                <button type="submit">Submit</button>
+                <input type="submit">Submit</input>
             </form>
         </div>`
 	);
 }
-
 
 module.exports.render = render;
