@@ -103,60 +103,31 @@ class databaseHandler{
       //Delete a user account
       deleteUser(email, pass){
 
-        var query = 'DELETE FROM Users WHERE email = ? AND password = ?';
-        var variables = [email, pass];
-        query = mysql.format(query, variables);
-
-        return this.queryDatabase(query);
-
-      }
-
-      //Change a users password
-      changeUserPassword(userName, oldPass, newPass){
-
-        var query = 'UPDATE Users SET password = ? WHERE email = ? AND password = ?';
-        var variables = [newPass, userName, oldPass];
-        query = mysql.format(query, variables);
-
-        this.queryDatabase(query);
-
       }
 
       //Get all of the hats.
       getHats() {
         var query = 'SELECT * FROM products;';
+
         return this.queryDatabase(query);
       }
 
-      //Find a product in the database by the name or the id.
-      getProduct(id){
-        query = 'SELECT * WHERE productName = ? OR productId = ?';
-        varaibles = [id, id];
+      //Add a hat to the database
+      addHat(productName,productDescription,productPrice,productImage,isActive,isFrontPage) {
+        var query = 'INSERT INTO Products (productName,productDescription,productPrice,productImage,isActive,isFrontPage) VALUES (?, ?, ?, ?, ?, ?)';
+        var variables = [productName,productDescription,productPrice,productImage,isActive,isFrontPage];
         query = mysql.format(query, variables);
 
         return this.queryDatabase(query);
       }
 
-      //Add a new product to the database
-      addProduct(name, desc){
-
-        query = `INSERT INTO Products (productName, productDescription) VALUES
-        (?, ?)`;
-        variables = [name, desc];
-        query = mysl.format(query, variables);
-
-        this.queryDatabase(query);
-      }
-
-      //Delte a product from the database by name or id
-      deleteProduct(id){
-
-        query = 'DELETE FROM Products WHERE productId = ? OR productName = ?';
-        variables = [id, id];
+      //Update a hat in the database
+      updateHat(productID,productName,productDescription,productPrice,productImage,isActive,isFrontPage) {
+        var query = 'UPDATE products SET productName= ?, productDescription= ?, productPrice= ?, productImage= ?, isActive= ?, isFrontPage=? WHERE productId= ?';
+        var varaibles = [productName,productDescription,productPrice,productImage,isActive,isFrontPage,productID];
         query = mysql.format(query, variables);
 
-        this.queryDatabase(query);
-
+        return this.queryDatabase(query);
       }
 
       //Create a new order and send back the last inserted ID
