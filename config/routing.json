@@ -31,7 +31,7 @@
 		"/register": {
 			"file":"Registration.js",
 			"title":"Register",
-			"navbar":true,
+			"navbar":false,
 			"loggedIn":false,
 			"admin":0
 		},
@@ -45,21 +45,21 @@
 		"/addHats": {
 			"file":"addHats.js",
 			"title":"Add Hats",
-			"navbar":true,
+			"navbar":false,
 			"loggedIn":true,
 			"admin":1
 		},
 		"/addProm": {
 			"file":"addProm.js",
 			"title":"Add Prom",
-			"navbar":true,
+			"navbar":false,
 			"loggedIn":true,
 			"admin":1
 		},
 		"/admin": {
 			"file":"admin.js",
 			"title":"Admin",
-			"navbar":true,
+			"navbar":false,
 			"loggedIn":true,
 			"admin":1
 		},
@@ -72,7 +72,7 @@
 		},
 		"/hats": {
 			"file":"hats.js",
-			"title":"Hats",
+			"title":"All of our Hats",
 			"navbar":true,
 			"loggedIn":false,
 			"admin":0
@@ -100,7 +100,7 @@
 		},
 		"/checkout_complete": {
 			"file":"Checkout_complete.js",
-			"title":"Checkout",
+			"title":"Checkout Complete!",
 			"navbar":false,
 			"loggedIn":true,
 			"admin":0
