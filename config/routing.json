@@ -49,6 +49,13 @@
 			"loggedIn":true,
 			"admin":1
 		},
+		"/edithat": {
+			"file":"editHat.js",
+			"title":"Add Hats",
+			"navbar":false,
+			"loggedIn":true,
+			"admin":1
+		},
 		"/addProm": {
 			"file":"addProm.js",
 			"title":"Add Prom",

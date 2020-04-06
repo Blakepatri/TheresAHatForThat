@@ -1,6 +1,6 @@
 const formidable = require('formidable');
 const fs = require('fs');
-const path= require('path');
+const path = require('path');
 const Hat = require(path.join(__dirname,"..","Hat.js"));
 /**
 A function to handle adding a hat to the database
@@ -27,9 +27,29 @@ function API(req,res,cookies,session,query,SessionHandler,db,hats) {
 			        	}
 			        	else {
 			        		console.log("Image uploaded for new hat, adding hat to database");
-			        		var isActive = fields.isActive === "true";//Sent as string
-			        		var isFrontPage = fields.isFrontPage === "true";
-			        		db.addHat(fields.productName,fields.productDescription,fields.productPrice,imageName,isActive,isFrontPage)
+			        		var isActiveNum,isActive;
+			        		var isFrontPage,isFrontPageNum;
+				    		if (fields.isActive === "true") {
+				    			//Sent as string
+				    			isActiveNum = 1;//Stored as TINYINT type in database
+				    			isActive = true;
+				    		}
+				    		else {
+				    			isActiveNum = 0;
+				    			isActive = false;
+				    		}
+
+				    		if (fields.isFrontPage === "true") {
+				    			//Sent as string
+				    			isFrontPageNum = 1;//Stored as tinyint
+				    			isFrontPage = true;
+				    		}
+				    		else {
+				    			isFrontPageNum = 0;
+				    			isFrontPage = false;
+				    		}
+
+			        		db.addHat(fields.productName,fields.productDescription,fields.productPrice,imageName,isActiveNum,isFrontPageNum)
 			        		.then(function(results) {
 			        			console.log("New Hat Added with ID: " + results.insertId);
 			        			//update the hats loaded in memory
@@ -54,33 +74,6 @@ function API(req,res,cookies,session,query,SessionHandler,db,hats) {
 	    		sendError(res,500,"Sorry, something went wrong when processing your request.");
 	    	}
 	    });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		/*var body = [];
-		req.on('data', (chunk) => {
-		  	body.push(chunk);
-		  	//There's no way an email and password should be taking that many bits, kill the connection.
-		  	if (body.length > 5000) {
-                req.connection.destroy();
-		  	}
-		}).on('end', () => {
-		  	body = Buffer.concat(body).toString();
-		  	var postData = qs.parse(body);
-		  	console.log("ADD HAT POST DATA: ",postData);
-
-		});*/
 	}
 	else {
 		sendError(res,500,"Sorry, something went wrong when processing your request.");

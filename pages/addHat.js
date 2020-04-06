@@ -8,7 +8,7 @@ function render() {
                 <label for="desc"><b>Description</b></label>
                 <input type="text" name="productDescription" required>
 
-                <label for="price"><b>Price</b></label>
+                <label for="price"><b>Price in CENTS</b></label>
                 <input type="text" name="productPrice" required>
 
                 <label for="price"><b>Will it be on the front page?</b></label>

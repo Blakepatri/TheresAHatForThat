@@ -124,7 +124,7 @@ class databaseHandler{
       //Update a hat in the database
       updateHat(productID,productName,productDescription,productPrice,productImage,isActive,isFrontPage) {
         var query = 'UPDATE products SET productName= ?, productDescription= ?, productPrice= ?, productImage= ?, isActive= ?, isFrontPage=? WHERE productId= ?';
-        var varaibles = [productName,productDescription,productPrice,productImage,isActive,isFrontPage,productID];
+        var variables = [productName,productDescription,productPrice,productImage,isActive,isFrontPage,productID];
         query = mysql.format(query, variables);
 
         return this.queryDatabase(query);

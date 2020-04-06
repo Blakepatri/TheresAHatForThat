@@ -17,7 +17,7 @@ function renderHats(hats) {
   var hatsHTML = "";
 
   for(var hat in hats) {
-    if (hats[hat].frontPage) {
+    if (hats[hat].frontPage && hats[hat].active) {
       hatsHTML += `
       <a class="column" href="/hat?id=${hats[hat].id}">
         <img src="/images/${hats[hat].img}">
