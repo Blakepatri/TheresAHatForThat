@@ -146,6 +146,16 @@
 			"file":"UpdateAccount.js",
 			"loggedIn":true,
 			"admin":0
+		},
+		"/add_hat": {
+			"file":"AddHat.js",
+			"loggedIn":true,
+			"admin":1
+		},
+		"/update_hat": {
+			"file":"UpdateHat.js",
+			"loggedIn":true,
+			"admin":1
 		}
 	}
 }
