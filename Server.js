@@ -188,12 +188,23 @@ class Server {
 		}
 		//Check if it should be routed to the API
 		else if (this.routing.api[URLPath]) {
-			var cookies = new Cookies(request,response);
-			var session = this.SessionHandler.getSession(request,response,cookies);
 			var api = this.routing.api[URLPath];
-			this.log(4,"API information:",api);
-			//Call the API function from the API object, Cookies, session, SessionHandler, databaseHandler, and hats do not necessarily need to be handled by the API
-			api.API(request,response,cookies,session,query,this.SessionHandler,this.db,this.Hats.hats);
+			if (api.loggedIn && !session) {
+				//Check if the user needs to be logged in to access this route, if they do send them off to login
+				this.HTMLResponse(request,response,this.routing.pages["/login"],session,query);
+			}
+			else if (!session || api.admin > session.admin) {
+				//User not permitted to see this page, send out a 404
+				this.HTTPError(request,response,404);
+			}
+			else {
+				//Route the API request
+				var cookies = new Cookies(request,response);
+				var session = this.SessionHandler.getSession(request,response,cookies);
+				this.log(4,"API information:",api);
+				//Call the API function from the API object, Cookies, session, SessionHandler, databaseHandler, and hats do not necessarily need to be handled by the API
+				api.API(request,response,cookies,session,query,this.SessionHandler,this.db,this.Hats.hats);
+			}
 		}
 		//Check if it should try and serve a file or image
 		else if (URLPath.search(/^(\/images\/)/i) > -1) {
@@ -261,6 +272,7 @@ class Server {
 			}
 		}
 		else {
+			//No file, or there was an error reading it
 			this.HTTPError(request,response,404);
 		}
 	}
