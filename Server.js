@@ -1,11 +1,11 @@
 /**
 A node based HTTP server
 
-constructor:  port, logging, routing, localOnly
+constructor:  port, logging, routing, databaseInfo
 	INT port: port the HTTP server will be listening on. Not implemented.
 	INT logging: level of logging to the Node console, 0 for bare minimum and initialization, 1 for error, 2 for warning, 3 for request URLs, 4 for request data 
 	OBJECT routing: the object that holds the routing information for serving files, and responding to requests. The object KEYS are valid request URLs
-	BOOL localOnly: if true will only respond to requests from localhost or 127.0.0.1, WILL BE DISCONTINUED
+	OBJECT databaseInfo: the login information used to initialize the database
 */
 
 //Node modules
@@ -119,16 +119,17 @@ class Server {
 			throw err;
 		}.bind(this));
 
-		//Essentially every API route has an API() function that gets called when a request is routed to it. The API() function is expected to handle
+		//Essentially every API route has an API() function that gets called when a request is routed to it. The API() function is passed the following parameters:
+		//request,response,cookies,session,query,this.SessionHandler,this.db,this.Hats.hats
 		for (var api in this.routing.api) {
 			this.log(0,"API found: " + api);
 			var currentAPI = this.routing.api[api];
 			currentAPI.API = require(path.join(APIDirectory,currentAPI.file)).API;
 		}
-		this.log(0,"Finished calling API init. functions, some may still be doing stuff in the background.");
+		this.log(0,"Finished calling API init functions, some may still be doing stuff in the background.");
 	}
 
-	//Initialize the server
+	//Initialize the HTTP server
 	initHTTPServer() {
 		this.log(0,"Beginning HTTP server init","Port: ",this.port,"Logging level: ",this.logging);
 		this.HTTP = http.createServer((request, response) => {

@@ -28,7 +28,6 @@ class databaseHandler{
       }
 
       queryDatabase(query) {
-        console.log("QUERYING DB: " + query);
         return new Promise(function(resolve,reject) {
           //Checkout a connection to use from the pool.
           db.pool.getConnection(function(err, connection) {

@@ -29,7 +29,6 @@ class Cart {
 			this.hats[hat.id].hat = hat;
 			this.hats[hat.id].qty = 1;
 		}
-
 	}
 
 	//Remove a single hat from the Cart
@@ -48,7 +47,7 @@ class Cart {
 					delete this.hats[hat.id];
 				}
 				catch(err) {
-
+					console.log(err);
 				}
 			}
 		}
@@ -66,7 +65,7 @@ class Cart {
 				delete this.hats[id];
 			}
 			catch(err) {
-
+				console.log(err);
 			}
 		}
 	}
@@ -83,6 +82,7 @@ class Cart {
 			console.log(err);
 		}
 
+		//Total price is stored as CENTS, allows easy storage and math of integers.
 		return total
 	}
 }
