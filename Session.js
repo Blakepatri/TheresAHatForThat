@@ -19,10 +19,15 @@ class Session {
 			this.username = username;
 			this.admin = admin;
 			this.cart = new Cart();
+			//Set a timestamp for the last time the session was accessed
+			this.last = Date.now();
+
+			//Set the session ID by simply concatinating the timestamp and userId, will generate a unique value. 
+			//If someone is trying to start many sessions with the same user it might overwrite a session, but that isn't anything to be concerned about
+			this.id = this.userId + "-" + this.last;
 		}
 
-		//Set a timestamp for the last time the session was accessed
-		this.last = Date.now();
+		
 	}
 }
 

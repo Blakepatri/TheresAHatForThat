@@ -58,8 +58,8 @@ class SessionHandler {
 		if (newSession) {
 			//Encrypt the session to be sent back, only the userId and username needs to be sent with the cookie.
 			//Everything else can be cached server side.
-			cookies.set("TAHFT",this.encryptSession(newSession.userId,newSession.username));
-			this.sessions[userId] = newSession;
+			cookies.set("TAHFT",this.encryptSession(newSession.userId,newSession.username,newSession.last,newSession.id));
+			this.sessions[newSession.id] = newSession;
 			return true;
 		}
 		else {
@@ -74,7 +74,7 @@ class SessionHandler {
 
 		session.last = Date.now();
 		try {
-			cookies.set("TAHFT",this.encryptSession(session.userId,session.username))
+			cookies.set("TAHFT",this.encryptSession(session.userId,session.username,session.last,session.id))
 		}
 		catch(err) {
 
@@ -82,10 +82,12 @@ class SessionHandler {
 	}
 
 	//Encrypt the session
-	encryptSession(userId,username) {
+	encryptSession(userId,username,timestamp,sessionId) {
 		var sessionObj = {
+			"id":sessionId,
 			"userId":userId,
-			"username":username
+			"username":username,
+			"timestamp":timestamp
 		};
 		var sessionJSON = JSON.stringify(sessionObj);
 		var cipher = crypto.createCipher('aes-256-cbc',this.SessionKey);
@@ -108,12 +110,12 @@ class SessionHandler {
 			sessionCookie = this.decryptSession(sessionCookieString);
 		}
 		
-		//User ID is something that MUST be set for this. If it is not then the session has been compromised somehow, return null.
-		if (sessionCookie && sessionCookie.userId) {
-			var userId = sessionCookie.userId;
+		//id and User ID MUST be set for this. If it not then the session has been compromised somehow, return null.
+		if (sessionCookie && sessionCookie.id && sessionCookie.userId) {
+			var sessionID = sessionCookie.id;
 			//session currently loaded in memory, grab it from there and refresh the last accessed time
-			if (this.sessions[userId]) {
-				session = this.sessions[userId];
+			if (this.sessions[sessionCookie.id]) {
+				session = this.sessions[sessionCookie.id];
 				session.last = Date.now();
 			}
 			else {
