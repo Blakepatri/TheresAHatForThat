@@ -58,7 +58,7 @@ class SessionHandler {
 		if (newSession) {
 			//Encrypt the session to be sent back, only the userId and username needs to be sent with the cookie.
 			//Everything else can be cached server side.
-			cookies.set("TAHFT",this.encryptSession(newSession.userId,newSession.username,newSession.last,newSession.id));
+			cookies.set("TAHFT",this.encryptSession(newSession));
 			this.sessions[newSession.id] = newSession;
 			return true;
 		}
@@ -74,7 +74,7 @@ class SessionHandler {
 
 		session.last = Date.now();
 		try {
-			cookies.set("TAHFT",this.encryptSession(session.userId,session.username,session.last,session.id))
+			cookies.set("TAHFT",this.encryptSession(session))
 		}
 		catch(err) {
 
@@ -82,12 +82,12 @@ class SessionHandler {
 	}
 
 	//Encrypt the session
-	encryptSession(userId,username,timestamp,sessionId) {
+	encryptSession(session) {
 		var sessionObj = {
-			"id":sessionId,
-			"userId":userId,
-			"username":username,
-			"timestamp":timestamp
+			"id":session.id,
+			"userId":session.userId,
+			"username":session.username,
+			"last":session.last
 		};
 		var sessionJSON = JSON.stringify(sessionObj);
 		var cipher = crypto.createCipher('aes-256-cbc',this.SessionKey);
@@ -141,6 +141,8 @@ class SessionHandler {
 			session = null;
 		}
 
+		console.log(session);
+
 		return session;
 	}
 
@@ -151,8 +153,6 @@ class SessionHandler {
 			//Delete the session object
 			delete this.sessions[session.id];
 			session = undefined;
-
-			//CLEAR FROM DATABASE IF STORED
 		}
 
 		//Clear the cookie
@@ -160,7 +160,7 @@ class SessionHandler {
 	}
 
 	//Check the integrity of the session to see if it matches what we have stored
-	checkSession(req,resp) {
+	checkSession(req,res,session) {
 
 	}
 }
