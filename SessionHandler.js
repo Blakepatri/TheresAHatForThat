@@ -9,6 +9,13 @@ const Session = require(path.join(__dirname,'Session.js'));
 const algorithm = 'aes-256-cbc';
 const encryptionConfig = path.join(__dirname,"config","encryption.json");
 
+//Options for cookie security
+const cookieOptions = {
+	"maxAge":(1000 * 60 * 30),//value in milliseconds, expires after 30 minutes
+	"httpOnly":true,//Dont allow JS to modify the cookie
+	"overwrite":true//Overwrite cookies of the same name
+};
+
 class SessionHandler {
 	constructor() {
 		//Read the session key from the file
@@ -58,7 +65,7 @@ class SessionHandler {
 		if (newSession) {
 			//Encrypt the session to be sent back, only the userId and username needs to be sent with the cookie.
 			//Everything else can be cached server side.
-			cookies.set("TAHFT",this.encryptSession(newSession));
+			this.setCookie(cookies,newSession);
 			this.sessions[newSession.id] = newSession;
 			return true;
 		}
@@ -67,17 +74,25 @@ class SessionHandler {
 		}
 	}
 
+	//Update the session cookie with the current session values
 	updateSession(cookies,session) {
 		if (!session || !cookies || !session.userId) {
 			return false;
 		}
 
+		//Update the timestamp
 		session.last = Date.now();
+		this.setCookie(cookies,session)
+	}
+
+	//Set a the cookie to be sent with the browser
+	setCookie(cookies,session) {
 		try {
-			cookies.set("TAHFT",this.encryptSession(session))
+			cookies.set("TAHFT",this.encryptSession(session),cookieOptions);
 		}
 		catch(err) {
-
+			console.log("Something went wrong setting a cookie.");
+			console.log(err);
 		}
 	}
 
