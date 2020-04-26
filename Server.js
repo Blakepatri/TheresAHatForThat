@@ -133,7 +133,13 @@ class Server {
 	initHTTPServer() {
 		this.log(0,"Beginning HTTP server init","Port: ",this.port,"Logging level: ",this.logging);
 		this.HTTP = http.createServer((request, response) => {
-			this.HTTPRequest(request,response);
+			try {
+				this.HTTPRequest(request,response);
+			}
+			catch(err) {
+				console.log("********** CRITICAL ERROR PROCESSING A REQUEST **********");
+				console.log(err);
+			}
 		});
 
 		//Begin listening for requests
