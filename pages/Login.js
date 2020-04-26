@@ -3,13 +3,13 @@ Home page HTML elements
 
 constructor: 
 */
-function render() {
+function render(session,hats,query) {
 	return (
 		`<div class="login">
 			<form action="/user_login" method="POST">
         		<div class="container">
-            		<label for="uname"><b>Username</b></label>
-            		<input type="text" placeholder="Enter Username" name="uname" required>
+            		<label for="uname"><b>Email</b> ${renderLoginError(query)}</label>
+            		<input type="text" placeholder="Enter Email" name="uname" required>
 
             		<label for="psw"><b>Password</b></label>
             		<input type="password" placeholder="Enter Password" name="psw" required>
@@ -25,6 +25,15 @@ function render() {
 			</form>
 		</div>`
 	);
+}
+
+function renderLoginError(query) {
+    if (query && query["login_error"]) {
+        return " - Sorry, but your email or password is incorrect.";
+    }
+    else {
+        return "";
+    }
 }
 
 
