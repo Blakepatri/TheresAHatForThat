@@ -14,6 +14,7 @@ function render(session) {
       <a href="/user_logout">Log Out</a>
     </div>
 </div>
+<h1 class="title">There's A Hat For That</h1>
 `);
   }
   else {
@@ -25,6 +26,7 @@ function render(session) {
       <a href="/login">Log In</a>
     </div>
 </div>
+<h1 class="title">There's A Hat For That</h1>
 `);
   }
 
