@@ -137,7 +137,7 @@ class Server {
 				this.HTTPRequest(request,response);
 			}
 			catch(err) {
-				console.log("********** CRITICAL ERROR PROCESSING A REQUEST **********");
+				console.log("********** CRITICAL ERROR PROCESSING A HTTP REQUEST **********");
 				console.log(err);
 			}
 		});

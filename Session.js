@@ -7,8 +7,8 @@ const path = require('path');
 const Cart = require(path.join(__dirname,"Cart.js"));
 
 class Session {
-	constructor(userId,username,admin) {
-		if (!username || !userId) {
+	constructor(userId,username,admin,ipAddr,useragent) {
+		if (!username || !userId || !useragent) {
 			throw "Error, attempting to start a session without critical data.";
 		}
 		else {
@@ -18,6 +18,8 @@ class Session {
 			this.userId = userId;
 			this.username = username;
 			this.admin = admin;
+			this.ipAddr = ipAddr;
+			this.useragent = useragent;
 			this.cart = new Cart();
 			//Set a timestamp for the last time the session was accessed
 			this.last = Date.now();
@@ -26,8 +28,6 @@ class Session {
 			//If someone is trying to start many sessions with the same user it might overwrite a session, but that isn't anything to be concerned about
 			this.id = this.userId + "-" + this.last;
 		}
-
-		
 	}
 }
 

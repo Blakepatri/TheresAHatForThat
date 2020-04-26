@@ -34,7 +34,8 @@ function API(req,res,cookies,session,query,SessionHandler,db) {
 
 		    			var sessionError = false;
 		    			try {
-							SessionHandler.startSession(cookies,results[0].userId,postData['uname'],admin);
+		    				//Start the session, ipAddr and useragent are used to check against spoofing
+							SessionHandler.startSession(cookies,results[0].userId,postData['uname'],admin,req.connection.remoteAddress,req.headers['user-agent']);
 						}
 						catch(err) {
 							console.log("There was an error starting a session: ",err);
@@ -42,6 +43,7 @@ function API(req,res,cookies,session,query,SessionHandler,db) {
 						}
 
 						if (!sessionError) {
+							//User now logged in, redirect to home
 							console.log("User login: " + postData['uname']);
 			    			res.writeHead(307, { Location: '/home' });
 			    			res.end();
@@ -51,7 +53,9 @@ function API(req,res,cookies,session,query,SessionHandler,db) {
 						}
 		    		}
 		    		else {
-		    			sendError(res,200,"Sorry, but your email or password is incorrect.");
+		    			//invalid login, send them back
+		    			res.writeHead(307, { Location: '/login?login_error=true' });
+			    		res.end();
 		    		}
 		    		
 		    	})

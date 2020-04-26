@@ -11,10 +11,15 @@ const encryptionConfig = path.join(__dirname,"config","encryption.json");
 
 //Options for cookie security
 const cookieOptions = {
-	"maxAge":(1000 * 60 * 30),//value in milliseconds, expires after 30 minutes
+	"maxAge":(1000 * 60 * 60),//value in milliseconds, expires after 30 minutes
 	"httpOnly":true,//Dont allow JS to modify the cookie
 	"overwrite":true//Overwrite cookies of the same name
 };
+
+//How often the server should check for inactive sessions in milliseconds
+const checkInactivePeriod = 1000 * 60 * 30; //30 minutes
+//How long a session can be unused before getting removed in milliseconds
+const inactiveTimeLength = 1000 * 60 * 60; //60 minutes
 
 class SessionHandler {
 	constructor() {
@@ -22,6 +27,8 @@ class SessionHandler {
 		fs.readFile(encryptionConfig, 'utf8', (err,data) => {this.setEncryptionKey(err,data)});
 		//Store the most recent sessions in memory
 		this.sessions = {};
+		//The interval that regularly checks for inactive sessions
+		this.checkInactiveInterval = setInterval(() => {this.checkInactiveSessions();},checkInactivePeriod);
 	}
 
 	setEncryptionKey(err,data) {
@@ -40,30 +47,24 @@ class SessionHandler {
 	}
 
 	//Start a new session, returns true if succesful, false otherwise
-	startSession(cookies,userId,username,admin) {
+	//ipAddr and useragent are used to check against spoofing
+	startSession(cookies,userId,username,admin,ipAddr,useragent) {
 		var newSession = null;
 
 		if (!admin) {
 			admin = 0;
 		}
 
-		if (this.sessions[userId]) {
-			//This user is already logged in, don't know why a new session is trying to be started
-			newSession = this.sessions[userId];
-			newSession.last = Date.now();
+		try {
+			newSession = new Session(userId,username,admin,ipAddr,useragent);
 		}
-		else {
-			try {
-				newSession = new Session(userId,username,admin);
-			}
-			catch(err) {
-				console.log("Error creating session: ",err);
-				newSession = null;
-			}
+		catch(err) {
+			console.log("Error creating session: ",err);
+			newSession = null;
 		}
 		
 		if (newSession) {
-			//Encrypt the session to be sent back, only the userId and username needs to be sent with the cookie.
+			//Encrypt the session to be sent back, only the id, userId, timestamp and username needs to be sent with the cookie.
 			//Everything else can be cached server side.
 			this.setCookie(cookies,newSession);
 			this.sessions[newSession.id] = newSession;
@@ -80,7 +81,6 @@ class SessionHandler {
 			return false;
 		}
 
-		//Update the timestamp
 		session.last = Date.now();
 		this.setCookie(cookies,session)
 	}
@@ -114,9 +114,7 @@ class SessionHandler {
 
 	//Decrypt and parse session info sent from a user, returns null if there is an error.
 	getSession(req,res,cookies) {
-		console.log("GETTING SESSION: ");
 		var sessionCookieString = cookies.get('TAHFT');
-		console.log(sessionCookieString);
 		var sessionCookie = null;
 		var session = null;
 
@@ -133,10 +131,15 @@ class SessionHandler {
 				session = this.sessions[sessionCookie.id];
 				session.last = Date.now();
 			}
-			else {
-				//GET SESSION FROM DATABASE
-			}
-		}		
+		}
+
+		console.log(session);
+
+		//Check if the user's data matches what is stored.
+		//checkSession will end the session if something is wrong with it
+		if (session && !this.checkSession(req,res,cookies,session)) {
+			session = null;//Session invalid, return null
+		}
 
 		return session;
 	}
@@ -156,8 +159,6 @@ class SessionHandler {
 			session = null;
 		}
 
-		console.log(session);
-
 		return session;
 	}
 
@@ -171,12 +172,35 @@ class SessionHandler {
 		}
 
 		//Clear the cookie
-		cookies.set("TAHFT"," ");
+		cookies.set("TAHFT"," ",cookieOptions);
+	}
+
+	//Check all sessions for old ones
+	checkInactiveSessions() {
+		var currentTime = Date.now();
+		for(var key in this.sessions) {
+			if ((this.sessions[key].last + inactiveTimeLength) < currentTime) {
+				console.log("Cleaning up old session:",this.sessions[key].username);
+				try {
+					delete this.sessions[key];
+				}
+				catch(err) {
+					console.log("Error deleting session",err);
+				}
+			}
+		}
 	}
 
 	//Check the integrity of the session to see if it matches what we have stored
-	checkSession(req,res,session) {
+	//If something is weird end the session
+	checkSession(req,res,cookies,session) {
+		var validSession = true;
+		if (req.headers['user-agent'] != session.useragent) {
+			this.endSession(req,res,cookies,session);
+			validSession = false;
+		}
 
+		return validSession;
 	}
 }
 

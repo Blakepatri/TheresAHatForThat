@@ -3,6 +3,7 @@ const path = require('path');
 const mysql = require('mysql');
 const database = require(path.join(__dirname,'database.js'));
 //Initialize the db object as global so it can be passed around through all of the promises.
+//TODO Properly bind "this" to the promises so db can be contained in the class
 var db;
 
 //A class for handling Database queries. Returns promises when a query is made.
