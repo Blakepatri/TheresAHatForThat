@@ -23,6 +23,11 @@ body {
   color: black;
 }
 
+.nav-bar a:focus {
+  background-color: #ddd;
+  color: black;
+}
+
 .nav-bar a.active {
   background-color: #306e33;
   color: white;
@@ -182,15 +187,21 @@ input[type=text], input[type=password], input[type=email], input[type=number] {
   box-sizing: border-box;
 }
 
+input:focus {
+  border-color: blue; 
+  border-width: 0.15em;
+}
+
 /* Set a style for all buttons */
 button, .cart-button, .add-hat-button {
-  background-color: #4CAF50;
+  background-color: #306e33;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
   border: none;
   cursor: pointer;
   width: 100%;
+  font-weight: bold;
 }
 
 /* Add a hover effect for buttons */
@@ -198,11 +209,16 @@ button:hover {
   opacity: 0.8;
 }
 
+button:focus {
+  background-color: #ddd;
+  color: black;
+}
+
 /* Extra style for the cancel button (red) */
 .cancelbtn {
   width: auto;
   padding: 10px 18px;
-  background-color: #f44336;
+  background-color: firebrick;
 }
 
 

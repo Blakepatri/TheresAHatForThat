@@ -9,10 +9,10 @@ function render(session,hats,query) {
 			<form action="/user_login" method="POST">
         		<div class="container">
             		<label for="uname"><b>Email</b> ${renderLoginError(query)}</label>
-            		<input type="text" placeholder="Enter Email" name="uname" required>
+                    <input type="text" placeholder="Enter Username" name="uname" id="uname" required>
 
-            		<label for="psw"><b>Password</b></label>
-            		<input type="password" placeholder="Enter Password" name="psw" required>
+                    <label for="psw"><b>Password</b></label>
+                    <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
 
             		<button type="submit">Login</button>
 
