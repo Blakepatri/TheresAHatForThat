@@ -8,14 +8,14 @@ function render() {
 		`<div class="login">
 			<form action="/register_user" method="POST">
         		<div class="container">
-            		<label for="uname"><b>Email</b></label>
-            		<input type="text" placeholder="Enter Email" name="email" required>
+            	<label for="uname"><b>Email</b></label>
+                <input type="text" placeholder="Enter Email" name="email" id="email" required>
 
-            		<label for="psw"><b>Password - Must be at least 10 characters.</b></label>
-            		<input type="password" placeholder="Enter Password" name="psw" required>
+                <label for="psw"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
 
-                    <label for="psw"><b>Confirm Password</b></label>
-                    <input type="password" placeholder="Enter Password again" name="psw-confirm" required>
+                <label for="psw"><b>Confirm Password</b></label>
+                <input type="password" placeholder="Enter Password again" name="psw-confirm" id="psw-confirm" required>
 
             		<button type="submit">Register</button>
         		</div>

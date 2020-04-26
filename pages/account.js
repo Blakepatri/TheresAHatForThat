@@ -8,13 +8,13 @@ function render(session) {
 		`<div class="account">
             <form action="/update_account" method="POST">
                 <label for="email"><b>Email</b></label>
-                <input type="email" placeholder="Enter Email" name="uname" value="${session.username}">
+                <input type="email" placeholder="Enter Email" name="uname" id="email" value="${session.username}">
 
                 <label for="psw"><b>Password</b></label>
-                <input type="password" placeholder="Enter Password" name="psw" value="">
+                <input type="password" placeholder="Enter Password" name="psw" id="psw" value="">
 
-                <label for="psw"><b>Confrim Password</b></label>
-                <input type="password" placeholder="Confrim Password" name="psw-confirm" value="">
+                <label for="psw"><b>Confirm Password</b></label>
+                <input type="password" placeholder="Confrim Password" name="psw-confirm" id="psw-confirm" value="">
 
                 <input type="submit" value="Update Account"></input>
             </form>
