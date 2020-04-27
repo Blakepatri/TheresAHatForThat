@@ -304,7 +304,7 @@ class Server {
 	setHTTPHeaders(response) {
 		response.setHeader('Content-Language', 'en-CA');//Canadian English
 		response.setHeader('Cross-Origin-Resource-Policy', 'same-site');//Allow requests from the same site
-		response.setHeader('Content-Security-Policy', `default-src 'self'; object-src 'none'; child-src 'self'`);//Dont allow resources from outside of the site to load, no plugins, no iframes
+		response.setHeader('Content-Security-Policy', `default-src 'self'; object-src 'none'; child-src 'self'`);//Dont allow resources from outside of the site to load, no plugins at all should load
 		response.setHeader('X-Content-Type-Options', 'nosniff');
 		response.setHeader('X-Frame-Options', 'DENY');//Disallow embedding of general requests in frames
 	}
