@@ -54,11 +54,11 @@ function HTMLResponse(req,res,HTMLData) {
 	<body>
 		${HTMLData}
 	</body>
-	</html>`
+	</html>`;
 
 
 	try {
-		res.setHeader('Access-Control-Allow-Headers', 'authorization, content-type');
+		setHTTPHeaders(res);
 	    res.writeHead(200, {
 	        'Content-Type': "text/html"
 	    });
@@ -68,6 +68,14 @@ function HTMLResponse(req,res,HTMLData) {
 	catch(err) {
 		console.log(err);
 	}
+}
+
+function setHTTPHeaders(response) {
+	response.setHeader('Content-Language', 'en-CA');//Canadian English
+	response.setHeader('Cross-Origin-Resource-Policy', 'same-site');//Allow requests from the same site
+	response.setHeader('Content-Security-Policy', `default-src 'self'; object-src 'none'; child-src 'self'`);//Dont allow resources from outside of the site to load, no plugins, no iframes
+	response.setHeader('X-Content-Type-Options', 'nosniff');
+	response.setHeader('X-Frame-Options', 'SAMEORIGIN');//Allow embeding in the main site, this is for the orders page
 }
 
 function redirect(req,res,url) {
