@@ -259,7 +259,8 @@ class Server {
 	    }
 
 	    if (!renderingError) {
-	    	response.setHeader('Access-Control-Allow-Headers', 'authorization, content-type');
+			this.setHTTPHeaders(response);
+	    	response.setHeader('Content-Type', 'text/html');
 		    response.writeHead(200, {
 		        'Content-Type': "text/html"
 		    });
@@ -279,7 +280,7 @@ class Server {
 		var file = this.FileHandler.getFile(fileName,fileFolder);
 		this.log(5,"File response: ",file);
 		if (file && file.readStream) {
-			response.setHeader('Access-Control-Allow-Headers', 'authorization, content-type');
+			this.setHTTPHeaders(response);
 			response.writeHead(200, {
 		        'Content-Type': file.contentType,
 		        'Content-Length': file.size
@@ -297,6 +298,15 @@ class Server {
 			//No file, or there was an error reading it
 			this.HTTPError(request,response,404);
 		}
+	}
+
+	//Set HTTP headers, mainly for security but there's also the language header
+	setHTTPHeaders(response) {
+		response.setHeader('Content-Language', 'en-CA');//Canadian English
+		response.setHeader('Cross-Origin-Resource-Policy', 'same-site');//Allow requests from the same site
+		response.setHeader('Content-Security-Policy', `default-src 'self'; object-src 'none'; child-src 'self'`);//Dont allow resources from outside of the site to load, no plugins, no iframes
+		response.setHeader('X-Content-Type-Options', 'nosniff');
+		response.setHeader('X-Frame-Options', 'DENY');//Disallow embedding of general requests in frames
 	}
 
 	//Send back an HTTP error message, code is the HTTP response code
