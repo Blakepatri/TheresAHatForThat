@@ -112,8 +112,6 @@ function isEmailValid(email) {
 		isValid = false;
 	}
 
-	console.log("IS EMAIL VALID: ",email,isValid);
-
     return isValid;
 }
 
