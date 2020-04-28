@@ -25,16 +25,15 @@ function API(req,res,cookies,session,query,SessionHandler,db) {
 		  	console.log(postData);
 
 		    if (isEmailValid(postData["email"]) && isPasswordValid(postData["psw"],postData["psw-confirm"])) {
-		    	var salt = "TAHFT_Sombrero";
-	    		var password = postData["psw"] + salt;
-	    		var hashedPass = crypto.createHash('sha256').update(password).digest('hex');
-
 	    		//DB operates asynchronously on promises
 	    		//First check if users exists with just the email
 	    		db.checkUser(postData["email"])
 	    		.then(function(results) {
 		    		if (results && results.length === 0) {
 		    			//user doesn't exist yet, add them
+		    			var salt = crypto.createHash('sha256').update(postData['email'] + "There's a salt for that!").digest('hex');
+			    		var password = postData["psw"] + salt;
+			    		var hashedPass = crypto.createHash('sha256').update(password).digest('hex');
 		    			db.addUser(postData["email"], hashedPass, salt, " ", " ")
 				    	.then(function(results) {
 				    		console.log("Registered new user: " + postData["email"]);

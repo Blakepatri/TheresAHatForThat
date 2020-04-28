@@ -18,12 +18,11 @@ function API(req,res,cookies,session,query,SessionHandler,db) {
 		}).on('end', () => {
 		  	body = Buffer.concat(body).toString();
 		  	var postData = qs.parse(body);
-		  	console.log("ACCOUNT POST DATA: ",postData);
 		  	//Check email and password even before bothering the database
 		  	if (isEmailValid(postData['uname']) && isPasswordValid(postData["psw"],postData["psw-confirm"])) {
 		  		if (postData['uname'] == session.username) {
 		  			//Email is the same, just update the password
-		  			var salt = "TAHFT_Sombrero";
+		  			var salt = crypto.createHash('sha256').update(postData['uname'] + "There's a salt for that!").digest('hex');
     				var password = postData["psw"] + salt;
     				var hashedPass = crypto.createHash('sha256').update(password).digest('hex');
 	    			

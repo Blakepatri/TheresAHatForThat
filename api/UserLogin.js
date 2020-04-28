@@ -20,7 +20,7 @@ function API(req,res,cookies,session,query,SessionHandler,db) {
 
 		  	//Check email and password even before bothering the database
 		  	if (isEmailValid(postData['uname']) && postData["psw"]) {
-		  		var salt = "TAHFT_Sombrero";
+		  		var salt = crypto.createHash('sha256').update(postData['uname'] + "There's a salt for that!").digest('hex');
 	    		var password = postData["psw"] + salt;
 	    		var hashedPass = crypto.createHash('sha256').update(password).digest('hex');
 	    		db.getUserForLogin(postData['uname'], hashedPass)
@@ -66,7 +66,9 @@ function API(req,res,cookies,session,query,SessionHandler,db) {
 		  	}
 		  	else {
 		  		//invalid email, let the user know.
-		  		sendError(res,200,"Sorry, but your email or password is incorrect.");
+		  		//invalid login, send them back
+    			res.writeHead(307, { Location: '/login?login_error=true' });
+	    		res.end();
 		  	}
 		});
 	}
